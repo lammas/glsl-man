@@ -732,7 +732,7 @@ module.exports = (function() {
         peg$c283 = function(equal) {
             return new node({
               type: "operator",
-              operator: "<" + equal
+              operator: "<" + (equal ? equal : '')
             });
           },
         peg$c284 = ">",
@@ -740,7 +740,7 @@ module.exports = (function() {
         peg$c286 = function(equal) {
             return new node({
               type: "operator",
-              operator: ">" + equal
+              operator: ">" + (equal ? equal : '')
             });
           },
         peg$c287 = "==",

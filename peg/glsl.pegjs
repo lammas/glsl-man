@@ -946,13 +946,13 @@ relational_operator
   = "<" !("<") equal:("=")? {
     return new node({
       type: "operator",
-      operator: "<" + equal
+      operator: "<" + (equal ? equal : '')
     });
   }
   / ">" !(">") equal:("=")? {
     return new node({
       type: "operator",
-      operator: ">" + equal
+      operator: ">" + (equal ? equal : '')
     });
   }
 
