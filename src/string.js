@@ -1,44 +1,46 @@
+var Whitespace = require('./whitespace');
 var util = require('util');
 
 var output = [];
+var whitespace = null;
 
-
-module.exports = function(node) {
-	console.log(util.inspect(node, { depth: null }));
+module.exports = function(node, options) {
+	// console.log(util.inspect(node, { depth: null }));
 
 	output.length = 0;
-	deparse(node);
+	whitespace = new Whitespace(options, token);
+	generate(node);
+	whitespace = null;
 	return output.join('');
 }
 
 var types = {
-	'root': deparse_root,
-	'type': deparse_type,
-	'identifier': deparse_identifier,
-	'operator': deparse_operator,
-	'parameter': deparse_parameter,
-	'function_declaration': deparse_function,
-	'function_call': deparse_function_call,
-	'scope': deparse_scope,
-	'declarator': deparse_declarator,
-	'declarator_item': deparse_declarator_item,
-	'expression': deparse_expression,
-	'binary': deparse_binary,
-	'postfix': deparse_postfix,
-	'field_selector': deparse_field_selector,
+	'root': gen_root,
+	'type': gen_type,
+	'preprocessor': gen_preprocessor,
+	'identifier': gen_identifier,
+	'operator': gen_operator,
+	'parameter': gen_parameter,
+	'function_declaration': gen_function,
+	'function_call': gen_function_call,
+	'scope': gen_scope,
+	'declarator': gen_declarator,
+	'declarator_item': gen_declarator_item,
+	'expression': gen_expression,
+	'binary': gen_binary,
+	'postfix': gen_postfix,
+	'field_selector': gen_field_selector,
+	'precision': gen_precision,
 
-	'float': deparse_float,
+	'float': gen_float,
 };
-
-var COMMA = ', ';
 
 function token(s) {
 	output.push(s);
 }
 
-
-function deparse(node) {
-	console.log('deparse: ', node.type);
+function generate(node) {
+	// console.log('generate: ', node.type);
 	var fn = types[node.type];
 	if (!fn) {
 		return console.warn('Warning: Encountered an AST node that has no generator:', node.type);
@@ -47,101 +49,171 @@ function deparse(node) {
 	return fn(node);
 }
 
-function list(a, separator) {
+function list(a, useSeparator) {
 	for (var i=0; i<a.length; i++) {
-		deparse(a[i]);
-		if (separator && i < a.length-1)
-			token(separator);
+		generate(a[i]);
+		if (useSeparator && i < a.length-1)
+			whitespace.separator();
 	}
 }
 
-function deparse_root(node) {
+function gen_root(node) {
 	list(node.statements);
 }
 
-function deparse_type(node) {
+function gen_type(node) {
+	if (node.qualifier) {
+		token(node.qualifier);
+		whitespace.space();
+	}
 	token(node.name);
 }
 
-function deparse_identifier(node) {
+function gen_preprocessor(node) {
+	switch (node.directive) {
+		case '#define':
+			token(node.directive);
+			whitespace.space();
+			token(node.identifier);
+			whitespace.space();
+			token(node.token_string);
+			whitespace.newline();
+			break;
+
+		case '#ifdef':
+		case '#ifndef':
+		case '#if':
+		case '#elif':
+			token(node.directive);
+			whitespace.space();
+			token(node.value);
+			whitespace.newline();
+			list(node.guarded_statements);
+			if ('elseBody' in node)
+				generate(node.elseBody);
+			else {
+				token('#endif');
+				whitespace.newline();
+			}
+			break;
+		case '#else':
+			token(node.directive);
+			whitespace.newline();
+			list(node.guarded_statements);
+			token('#endif');
+			whitespace.newline();
+			break;
+
+		case '#version':
+		case '#undef':
+		case '#pragma':
+		case '#extension':
+		case '#line':
+		case '#error':
+		case '#include':
+			token(node.directive);
+			whitespace.space();
+			token(node.value);
+			whitespace.newline();
+			break;
+	}
+}
+
+function gen_identifier(node) {
 	token(node.name);
 }
 
-function deparse_operator(node) {
+function gen_operator(node) {
 	token(node.operator);
 }
 
-function deparse_declarator(node) {
-	deparse(node.typeAttribute);
-	token(' ');
-	list(node.declarators, COMMA);
-	token(';');
+function gen_declarator(node) {
+	whitespace.tab();
+	generate(node.typeAttribute);
+	whitespace.space();
+	list(node.declarators, true);
+	whitespace.terminator();
 }
 
-function deparse_declarator_item(node) {
-	deparse(node.name);
+function gen_declarator_item(node) {
+	generate(node.name);
 	if ('initializer' in node) {
-		token(' ');
+		whitespace.space();
 		token('=');
-		token(' ');
-		deparse(node.initializer);
+		whitespace.space();
+		generate(node.initializer);
 	}
 }
 
-function deparse_expression(node) {
-	deparse(node.expression);
+function gen_expression(node) {
+	whitespace.tab();
+	generate(node.expression);
 }
 
-function deparse_binary(node) {
-	deparse(node.left);
-	token(' ');
-	deparse(node.operator);
-	token(' ');
-	deparse(node.right);
-	token(';');
+function gen_binary(node) {
+	generate(node.left);
+	whitespace.space();
+	generate(node.operator);
+	whitespace.space();
+	generate(node.right);
+	whitespace.terminator();
 }
 
-function deparse_parameter(node) {
+function gen_parameter(node) {
 	token(node.type_name);
-	token(' ');
+	whitespace.space();
 	token(node.name);
 }
 
-function deparse_function(node) {
-	deparse(node.returnType);
-	token(' ');
+function gen_function(node) {
+	generate(node.returnType);
+	whitespace.space();
 	token(node.name);
 	token('(');
-	list(node.parameters, COMMA);
+	list(node.parameters, true);
 	token(')');
-	deparse(node.body);
+	whitespace.space();
+	generate(node.body);
 }
 
-function deparse_function_call(node) {
+function gen_function_call(node) {
 	token(node.function_name);
 	token('(');
-	list(node.parameters, COMMA);
+	list(node.parameters, true);
 	token(')');
 }
 
-function deparse_scope(node) {
+function gen_scope(node) {
 	token('{');
+	whitespace.newline();
+	whitespace.indent();
 	list(node.statements);
+	whitespace.dedent();
 	token('}');
+	whitespace.newline();
 }
 
-function deparse_postfix(node) {
-	deparse(node.expression);
-	deparse(node.operator);
+function gen_postfix(node) {
+	generate(node.expression);
+	generate(node.operator);
 }
 
-function deparse_field_selector(node) {
+function gen_field_selector(node) {
 	token('.');
 	token(node.selection);
 }
 
-function deparse_float(node) {
+function gen_float(node) {
 	token(node.value);
 	if (node.value % 1 == 0)
 		token('.0');
+}
+
+function gen_precision(node) {
+	token(node.type);
+	whitespace.space();
+	token(node.precision);
+	whitespace.space();
+	token(node.typeName);
+	whitespace.terminator();
 }
