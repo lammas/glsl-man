@@ -1,12 +1,9 @@
 var Whitespace = require('./whitespace');
-var util = require('util');
 
 var output = [];
 var whitespace = null;
 
 module.exports = function(node, options) {
-	// console.log(util.inspect(node, { depth: null }));
-
 	output.length = 0;
 	whitespace = new Whitespace(options, token);
 	generate(node);
@@ -28,15 +25,55 @@ var types = {
 	'declarator_item': gen_declarator_item,
 	'expression': gen_expression,
 	'binary': gen_binary,
+	'unary': gen_unary,
 	'postfix': gen_postfix,
 	'field_selector': gen_field_selector,
 	'precision': gen_precision,
-
+	'accessor': gen_accessor,
+	'if_statement': gen_if_statement,
 	'float': gen_float,
+	'int': gen_int,
+};
+
+var noTerminator = {
+	'preprocessor': true,
+	'function_declaration' : true,
+	'if_statement' : true,
+	'scope': true
 };
 
 function token(s) {
 	output.push(s);
+}
+
+var stack = [];
+
+function top() {
+	if (stack.length == 0)
+		return null;
+	return stack[stack.length - 1];
+}
+
+function parent() {
+	if (stack.length < 2)
+		return null;
+	return stack[stack.length - 2];
+}
+
+function list_parameters(a) {
+	for (var i=0; i<a.length; i++) {
+		generate(a[i]);
+		if (i < a.length-1)
+			whitespace.separator();
+	}
+}
+
+function list_statements(a) {
+	for (var i=0; i<a.length; i++) {
+		generate(a[i]);
+		if (!(a[i].type in noTerminator))
+			whitespace.terminator();
+	}
 }
 
 function generate(node) {
@@ -46,19 +83,13 @@ function generate(node) {
 		return console.warn('Warning: Encountered an AST node that has no generator:', node.type);
 		//throw "Error: Unimplemented AST node: " + node.type;
 	}
-	return fn(node);
-}
-
-function list(a, useSeparator) {
-	for (var i=0; i<a.length; i++) {
-		generate(a[i]);
-		if (useSeparator && i < a.length-1)
-			whitespace.separator();
-	}
+	stack.push(node);
+	fn(node);
+	stack.pop();
 }
 
 function gen_root(node) {
-	list(node.statements);
+	list_statements(node.statements);
 }
 
 function gen_type(node) {
@@ -88,7 +119,7 @@ function gen_preprocessor(node) {
 			whitespace.space();
 			token(node.value);
 			whitespace.newline();
-			list(node.guarded_statements);
+			list_statements(node.guarded_statements);
 			if ('elseBody' in node)
 				generate(node.elseBody);
 			else {
@@ -99,7 +130,7 @@ function gen_preprocessor(node) {
 		case '#else':
 			token(node.directive);
 			whitespace.newline();
-			list(node.guarded_statements);
+			list_statements(node.guarded_statements);
 			token('#endif');
 			whitespace.newline();
 			break;
@@ -131,8 +162,7 @@ function gen_declarator(node) {
 	whitespace.tab();
 	generate(node.typeAttribute);
 	whitespace.space();
-	list(node.declarators, true);
-	whitespace.terminator();
+	list_parameters(node.declarators);
 }
 
 function gen_declarator_item(node) {
@@ -151,13 +181,46 @@ function gen_expression(node) {
 }
 
 function gen_binary(node) {
-	generate(node.left);
-	whitespace.space();
-	generate(node.operator);
-	whitespace.space();
-	generate(node.right);
-	whitespace.terminator();
+	switch (node.operator.operator) {
+		case '=':
+			generate(node.left);
+			whitespace.space();
+			generate(node.operator);
+			whitespace.space();
+			generate(node.right);
+			break;
+
+		default:
+			if (node.left.type == 'binary') {
+				token('(');
+				generate(node.left);
+				token(')');
+			}
+			else {
+				generate(node.left);
+			}
+
+			whitespace.space();
+			generate(node.operator);
+			whitespace.space();
+
+			if (node.right.type == 'binary') {
+				token('(');
+				generate(node.right);
+				token(')');
+			}
+			else {
+				generate(node.right);
+			}
+			break;
+	}
 }
+
+function gen_unary(node) {
+	generate(node.operator);
+	generate(node.expression);
+}
+
 
 function gen_parameter(node) {
 	token(node.type_name);
@@ -170,7 +233,7 @@ function gen_function(node) {
 	whitespace.space();
 	token(node.name);
 	token('(');
-	list(node.parameters, true);
+	list_parameters(node.parameters);
 	token(')');
 	whitespace.space();
 	generate(node.body);
@@ -179,7 +242,7 @@ function gen_function(node) {
 function gen_function_call(node) {
 	token(node.function_name);
 	token('(');
-	list(node.parameters, true);
+	list_parameters(node.parameters);
 	token(')');
 }
 
@@ -187,8 +250,9 @@ function gen_scope(node) {
 	token('{');
 	whitespace.newline();
 	whitespace.indent();
-	list(node.statements);
+	list_statements(node.statements);
 	whitespace.dedent();
+	whitespace.tab();
 	token('}');
 	whitespace.newline();
 }
@@ -203,10 +267,20 @@ function gen_field_selector(node) {
 	token(node.selection);
 }
 
+function gen_accessor(node) {
+	token('[');
+	generate(node.index);
+	token(']');
+}
+
 function gen_float(node) {
 	token(node.value);
 	if (node.value % 1 == 0)
 		token('.0');
+}
+
+function gen_int(node) {
+	token(node.value);
 }
 
 function gen_precision(node) {
@@ -215,5 +289,27 @@ function gen_precision(node) {
 	token(node.precision);
 	whitespace.space();
 	token(node.typeName);
-	whitespace.terminator();
+}
+
+function gen_if_statement(node, isElseIf) {
+	whitespace.tab();
+	if (isElseIf) token('elseif');
+	else token('if');
+	whitespace.space();
+	token('(');
+	generate(node.condition);
+	token(')');
+	whitespace.space();
+	generate(node.body);
+	if (node.elseBody) {
+		if (node.elseBody.type == 'if_statement') {
+			gen_if_statement(node.elseBody, true);
+		}
+		else {
+			whitespace.tab();
+			token('else');
+			whitespace.space();
+			generate(node.elseBody);
+		}
+	}
 }
