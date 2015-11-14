@@ -31,6 +31,7 @@ var types = {
 	'precision': gen_precision,
 	'accessor': gen_accessor,
 	'if_statement': gen_if_statement,
+	'return': gen_return,
 	'float': gen_float,
 	'int': gen_int,
 };
@@ -312,4 +313,11 @@ function gen_if_statement(node, isElseIf) {
 			generate(node.elseBody);
 		}
 	}
+}
+
+function gen_return(node) {
+	whitespace.tab();
+	token('return');
+	whitespace.space();
+	generate(node.value);
 }
