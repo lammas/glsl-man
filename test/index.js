@@ -112,6 +112,43 @@ test('Attributes, Uniforms, Varyings', function(t) {
 	t.end();
 });
 
+test('Nested expressions', function(t) {
+	var ast;
+	var source = 'float a = (-x - zmin) / (zmax - zmin);\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('if', function(t) {
+	var ast;
+	var source = 'void main() {\n\tif (a < 0.5) {\n\t\ta /= 4.0;\n\t}\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('if-else', function(t) {
+	var ast;
+	var source = 'void main() {\n\tif (a < 0.5) {\n\t\ta *= 4.0;\n\t}\n\telseif (a > 0.5) {\n\t\ta /= 2.0;\n\t}\n\telse {\n\t\ta = 0.0;\n\t}\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('return', function(t) {
+	var ast;
+	var source = 'float f() {\n\treturn 0.5;\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+
 test('simple.glsl', function(t) {
 	var file = path.join(__dirname, 'simple.glsl');
 	var source = fs.readFileSync(file).toString();
@@ -132,25 +169,18 @@ test('test.glsl', function(t) {
 	t.end();
 });
 
-
-// test('Source to AST', function(t) {
-// 	var file = path.join(__dirname, 'test.glsl');
+// test('diffuse.frag', function(t) {
+// 	var file = path.join(__dirname, 'diffuse.frag');
 // 	var source = fs.readFileSync(file).toString();
-// 	var ast = parser.parse(source);
-// 	t.notEqual(ast, null, 'Parser returned something');
-// 	//console.log(util.inspect(ast, { depth: null }));
-// 	t.end();
-// });
-//
-// test('AST to source', function(t) {
-// 	var file = path.join(__dirname, 'simple.glsl');
-// 	var source = fs.readFileSync(file).toString();
-// 	var ast = parser.parse(source);
-// 	t.notEqual(ast, null, 'Parser returned something');
-//
-// 	var src = parser.string(ast);
-// 	console.log('OUTPUT:\n');
-// 	console.log(src);
-// 	//console.log(util.inspect(ast, { depth: null }));
+// 	var ast;
+// 	t.throws(ast = parser.parse(source), 'Parsed successfully');
+// 	var generated = parser.string(ast);
+// 	console.log('SOURCE:');
+// 	console.log(source);
+// 	console.log('');
+// 	console.log('GENERATED:');
+// 	console.log(generated);
+// 	console.log('');
+// 	t.equal(generated, source, 'Generated code matches');
 // 	t.end();
 // });
