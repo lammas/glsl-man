@@ -169,18 +169,12 @@ test('test.glsl', function(t) {
 	t.end();
 });
 
-// test('diffuse.frag', function(t) {
-// 	var file = path.join(__dirname, 'diffuse.frag');
-// 	var source = fs.readFileSync(file).toString();
-// 	var ast;
-// 	t.throws(ast = parser.parse(source), 'Parsed successfully');
-// 	var generated = parser.string(ast);
-// 	console.log('SOURCE:');
-// 	console.log(source);
-// 	console.log('');
-// 	console.log('GENERATED:');
-// 	console.log(generated);
-// 	console.log('');
-// 	t.equal(generated, source, 'Generated code matches');
-// 	t.end();
-// });
+test('diffuse.frag', function(t) {
+	var file = path.join(__dirname, 'diffuse.frag');
+	var source = fs.readFileSync(file).toString();
+	var ast;
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
