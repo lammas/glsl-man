@@ -166,7 +166,7 @@ external_declaration
 preprocessor_operator
   = "#" directive:("undef" / "pragma"/
                    "version"/ "error" / "extension" /
-                   "line")
+                   "line" / "include")
     _ value:(defname:[^\n]* {return defname.join("")}) (newLine/EOF) {
     return new node({
       type: "preprocessor",
