@@ -26,6 +26,7 @@ var types = {
 	'expression': gen_expression,
 	'binary': gen_binary,
 	'unary': gen_unary,
+	'ternary': gen_ternary,
 	'postfix': gen_postfix,
 	'field_selector': gen_field_selector,
 	'precision': gen_precision,
@@ -320,4 +321,16 @@ function gen_return(node) {
 	token('return');
 	whitespace.space();
 	generate(node.value);
+}
+
+function gen_ternary(node) {
+	generate(node.condition);
+	whitespace.space();
+	token('?');
+	whitespace.space();
+	generate(node.is_true);
+	whitespace.space();
+	token(':');
+	whitespace.space();
+	generate(node.is_false);
 }

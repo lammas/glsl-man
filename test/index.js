@@ -121,6 +121,15 @@ test('Nested expressions', function(t) {
 	t.end();
 });
 
+test('Ternary expression', function(t) {
+	var ast;
+	var source = 'float a = b ? 1.0 : 0.0;\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
 test('if', function(t) {
 	var ast;
 	var source = 'void main() {\n\tif (a < 0.5) {\n\t\ta /= 4.0;\n\t}\n}\n';
