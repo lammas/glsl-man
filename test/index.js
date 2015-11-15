@@ -170,9 +170,7 @@ test('do-while', function(t) {
 	var ast;
 	var source = 'void main() {\n\tint sum = 10;\n\tdo {\n\t\t--sum;\n\t} while (sum > 0);\n}\n';
 	t.throws(ast = parser.parse(source), 'Parsed successfully');
-	inspect(ast);
 	var generated = parser.string(ast);
-	console.log(generated);
 	t.equal(generated, source, 'Generated code matches');
 	t.end();
 });
@@ -212,6 +210,25 @@ test('return', function(t) {
 	t.equal(generated, source, 'Generated code matches');
 	t.end();
 });
+
+test('Literals', function(t) {
+	var sources = {
+		'bool': 'bool n = true;\n',
+		'bool': 'bool n = false;\n',
+		'int': 'int n = 42;\n',
+		'float': 'float n = 0.2;\n',
+	};
+	var ast;
+	for (var name in sources) {
+		var source = sources[name];
+		t.throws(ast = parser.parse(source), name + ' - Parsed successfully');
+		var generated = parser.string(ast);
+		t.equal(generated, source, name + ' - Generated code matches');
+	}
+	t.end();
+});
+
+// TODO: in, out, inout
 
 
 test('simple.glsl', function(t) {

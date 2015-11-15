@@ -41,7 +41,12 @@ var types = {
 	'discard': gen_discard,
 	'float': gen_float,
 	'int': gen_int,
+	'bool': gen_bool,
 };
+
+function gen_bool(node) {
+	token(node.value);
+}
 
 var noTerminator = {
 	'preprocessor': true,
@@ -49,7 +54,6 @@ var noTerminator = {
 	'if_statement' : true,
 	'for_statement' : true,
 	'while_statement' : true,
-	// 'do_statement' : true,
 	'scope': true
 };
 
@@ -67,11 +71,10 @@ function list_parameters(a) {
 
 function list_statements(a) {
 	for (var i=0; i<a.length; i++) {
-		whitespace.tab();
-		if (generate(a[i]) === true) {
-			whitespace.newline();
+		if (a[i].type == 'expression' && !a[i].expression)
 			continue;
-		}
+		whitespace.tab();
+		generate(a[i]);
 		if (!(a[i].type in noTerminator))
 			whitespace.terminateLine();
 	}
@@ -174,8 +177,6 @@ function gen_declarator_item(node) {
 }
 
 function gen_expression(node) {
-	if (!node.expression)
-		return true;
 	generate(node.expression);
 }
 
@@ -280,6 +281,10 @@ function gen_float(node) {
 }
 
 function gen_int(node) {
+	token(node.value);
+}
+
+function gen_bool(node) {
 	token(node.value);
 }
 
