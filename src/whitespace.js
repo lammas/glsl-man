@@ -24,7 +24,9 @@ var Whitespace = function(options, token) {
 	this.tabcache = [''];
 }
 
-Whitespace.prototype.space = function () {
+Whitespace.prototype.space = function (hard) {
+	if (hard)
+		return this.token(' ');
 	return this.token(this.options.space);
 };
 

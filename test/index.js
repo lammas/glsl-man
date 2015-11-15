@@ -228,8 +228,16 @@ test('Literals', function(t) {
 	t.end();
 });
 
-// TODO: in, out, inout
+test('in, out, inout', function(t) {
+	var ast;
+	var source = 'float f(const in vec3 a, out vec3 b, inout float c) {\n\tb = a * vec3(c);\n\treturn c * 0.5;\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
 
+// TODO: minification
 
 test('simple.glsl', function(t) {
 	var file = path.join(__dirname, 'simple.glsl');

@@ -223,8 +223,16 @@ function gen_unary(node) {
 
 
 function gen_parameter(node) {
+	if (node.typeQualifier) {
+		token(node.typeQualifier);
+		whitespace.space(true);
+	}
+	if (node.parameterQualifier) {
+		token(node.parameterQualifier);
+		whitespace.space(true);
+	}
 	token(node.type_name);
-	whitespace.space();
+	whitespace.space(true);
 	token(node.name);
 }
 
