@@ -32,9 +32,13 @@ Whitespace.prototype.newline = function () {
 	return this.token(this.options.newline);
 };
 
-Whitespace.prototype.terminator = function () {
+Whitespace.prototype.terminateLine = function () {
 	this.token(this.options.terminator);
 	this.token(this.options.newline);
+};
+
+Whitespace.prototype.terminator = function () {
+	return this.token(this.options.terminator);
 };
 
 Whitespace.prototype.separator = function () {

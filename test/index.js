@@ -148,6 +148,62 @@ test('if-else', function(t) {
 	t.end();
 });
 
+test('for', function(t) {
+	var ast;
+	var source = 'void main() {\n\tint sum = 0;\n\tfor (int i = 0; i < 4; i++) {\n\t\tsum++;\n\t}\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('while', function(t) {
+	var ast;
+	var source = 'void main() {\n\tint sum = 10;\n\twhile (sum > 0) {\n\t\t--sum;\n\t}\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('do-while', function(t) {
+	var ast;
+	var source = 'void main() {\n\tint sum = 10;\n\tdo {\n\t\t--sum;\n\t} while (sum > 0);\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	inspect(ast);
+	var generated = parser.string(ast);
+	console.log(generated);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('continue', function(t) {
+	var ast;
+	var source = 'void main() {\n\tint sum = 0;\n\tfor (int i = 0; i < 4; i++) {\n\t\tcontinue;\n\t}\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('break', function(t) {
+	var ast;
+	var source = 'void main() {\n\tint sum = 0;\n\tfor (int i = 0; i < 4; i++) {\n\t\tbreak;\n\t}\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('discard', function(t) {
+	var ast;
+	var source = 'void main() {\n\tdiscard;\n}\n';
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
 test('return', function(t) {
 	var ast;
 	var source = 'float f() {\n\treturn 0.5;\n}\n';

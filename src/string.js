@@ -32,7 +32,13 @@ var types = {
 	'precision': gen_precision,
 	'accessor': gen_accessor,
 	'if_statement': gen_if_statement,
+	'for_statement': gen_for_statement,
+	'while_statement': gen_while_statement,
+	'do_statement': gen_do_statement,
+	'continue': gen_continue,
+	'break': gen_break,
 	'return': gen_return,
+	'discard': gen_discard,
 	'float': gen_float,
 	'int': gen_int,
 };
@@ -41,25 +47,14 @@ var noTerminator = {
 	'preprocessor': true,
 	'function_declaration' : true,
 	'if_statement' : true,
+	'for_statement' : true,
+	'while_statement' : true,
+	// 'do_statement' : true,
 	'scope': true
 };
 
 function token(s) {
 	output.push(s);
-}
-
-var stack = [];
-
-function top() {
-	if (stack.length == 0)
-		return null;
-	return stack[stack.length - 1];
-}
-
-function parent() {
-	if (stack.length < 2)
-		return null;
-	return stack[stack.length - 2];
 }
 
 function list_parameters(a) {
@@ -72,22 +67,24 @@ function list_parameters(a) {
 
 function list_statements(a) {
 	for (var i=0; i<a.length; i++) {
-		generate(a[i]);
+		whitespace.tab();
+		if (generate(a[i]) === true) {
+			whitespace.newline();
+			continue;
+		}
 		if (!(a[i].type in noTerminator))
-			whitespace.terminator();
+			whitespace.terminateLine();
 	}
 }
 
 function generate(node) {
-	// console.log('generate: ', node.type);
+	if (!node)
+		return;
 	var fn = types[node.type];
 	if (!fn) {
 		return console.warn('Warning: Encountered an AST node that has no generator:', node.type);
-		//throw "Error: Unimplemented AST node: " + node.type;
 	}
-	stack.push(node);
-	fn(node);
-	stack.pop();
+	return fn(node);
 }
 
 function gen_root(node) {
@@ -161,7 +158,6 @@ function gen_operator(node) {
 }
 
 function gen_declarator(node) {
-	whitespace.tab();
 	generate(node.typeAttribute);
 	whitespace.space();
 	list_parameters(node.declarators);
@@ -178,7 +174,8 @@ function gen_declarator_item(node) {
 }
 
 function gen_expression(node) {
-	whitespace.tab();
+	if (!node.expression)
+		return true;
 	generate(node.expression);
 }
 
@@ -248,7 +245,7 @@ function gen_function_call(node) {
 	token(')');
 }
 
-function gen_scope(node) {
+function gen_scope(node, noNewline) {
 	token('{');
 	whitespace.newline();
 	whitespace.indent();
@@ -256,7 +253,8 @@ function gen_scope(node) {
 	whitespace.dedent();
 	whitespace.tab();
 	token('}');
-	whitespace.newline();
+	if (!noNewline)
+		whitespace.newline();
 }
 
 function gen_postfix(node) {
@@ -294,8 +292,10 @@ function gen_precision(node) {
 }
 
 function gen_if_statement(node, isElseIf) {
-	whitespace.tab();
-	if (isElseIf) token('elseif');
+	if (isElseIf) {
+		whitespace.tab();
+		token('elseif');
+	}
 	else token('if');
 	whitespace.space();
 	token('(');
@@ -317,7 +317,6 @@ function gen_if_statement(node, isElseIf) {
 }
 
 function gen_return(node) {
-	whitespace.tab();
 	token('return');
 	whitespace.space();
 	generate(node.value);
@@ -333,4 +332,54 @@ function gen_ternary(node) {
 	token(':');
 	whitespace.space();
 	generate(node.is_false);
+}
+
+function gen_for_statement(node) {
+	token('for');
+	whitespace.space();
+	token('(');
+	generate(node.initializer);
+	whitespace.terminator();
+	whitespace.space();
+	generate(node.condition);
+	whitespace.terminator();
+	whitespace.space();
+	generate(node.increment);
+	token(')');
+	whitespace.space();
+	generate(node.body);
+}
+
+function gen_while_statement(node) {
+	token('while');
+	whitespace.space();
+	token('(');
+	generate(node.condition);
+	token(')');
+	whitespace.space();
+	generate(node.body);
+}
+
+function gen_do_statement(node) {
+	token('do');
+	whitespace.space();
+	gen_scope(node.body, true);
+	whitespace.space();
+	token('while');
+	whitespace.space();
+	token('(');
+	generate(node.condition);
+	token(')');
+}
+
+function gen_continue(node) {
+	token('continue');
+}
+
+function gen_break(node) {
+	token('break');
+}
+
+function gen_discard(node) {
+	token('discard');
 }

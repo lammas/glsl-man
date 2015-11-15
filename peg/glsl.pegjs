@@ -298,7 +298,7 @@ preprocessor_statement_branch
 
 function_definition
   = prototype:function_prototype body:compound_statement {
-      result = new node({
+      var result = new node({
         type: "function_declaration",
         name: prototype.name,
         returnType: prototype.returnType,
@@ -310,7 +310,7 @@ function_definition
 
 compound_statement
   = left_brace statements:statement_list? right_brace {
-      result = new node({
+      var result = new node({
         type: "scope",
         statements: []
       });
@@ -352,7 +352,7 @@ selection_statement
   = "if" left_paren condition:expression right_paren
      if_body:statement_with_scope
      else_body:("else" (_)? statement_with_scope)? {
-       result = new node({
+       var result = new node({
          type:"if_statement",
          condition:condition,
          body:if_body
@@ -418,9 +418,7 @@ jump_statement
   / type:("continue" semicolon
           / "break" semicolon
           / "return" semicolon
-          / (&{ return shaderType == "fs" }"discard"
-             {return "discard";})
-             semicolon) {
+          / "discard" semicolon) {
             return new node({
               type:type[0]
             });
@@ -491,7 +489,7 @@ function_prototype
   = type:(void_type/precision_type) _
     identifier:identifier left_paren
     parameters:function_prototype_parameter_list? right_paren {
-      result = new node({
+      var result = new node({
         type:"function_prototype",
         name: identifier.name,
         returnType: type,
@@ -880,7 +878,7 @@ function_identifier
 unary_expression
   = head:("++" / "--" / "!" / "~" / "+" / "-")? _?
     tail:postfix_expression_no_repeat {
-      result = tail
+      var result = tail
       if (head) {
         result = new node({
           type: "unary",
@@ -1063,7 +1061,7 @@ logical_or_expression
 conditional_expression
   = head:logical_or_expression
     tail:(_? "?" _? expression _? ":" _? assignment_expression)? {
-      result = head;
+      var result = head;
       if (tail) {
         result = new node({
           type: "ternary",
