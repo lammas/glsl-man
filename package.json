@@ -28,5 +28,6 @@
     "tape": "^4.2.2"
   },
   "dependencies": {
+    "cssauron": "^1.2.0"
   }
 }

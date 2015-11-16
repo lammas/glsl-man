@@ -250,7 +250,7 @@ test('simple.glsl', function(t) {
 });
 
 test('test.glsl', function(t) {
-	var file = path.join(__dirname, 'simple.glsl');
+	var file = path.join(__dirname, 'test.glsl');
 	var source = fs.readFileSync(file).toString();
 	var ast;
 	t.throws(ast = parser.parse(source), 'Parsed successfully');
@@ -266,5 +266,36 @@ test('diffuse.frag', function(t) {
 	t.throws(ast = parser.parse(source), 'Parsed successfully');
 	var generated = parser.string(ast);
 	t.equal(generated, source, 'Generated code matches');
+	t.end();
+});
+
+test('test.glsl', function(t) {
+	var file = path.join(__dirname, 'test.glsl');
+	var source = fs.readFileSync(file).toString();
+	var ast;
+	t.throws(ast = parser.parse(source), 'Parsed successfully');
+	inspect(ast);
+
+	var generated = parser.string(ast);
+	t.equal(generated, source, 'Generated code matches');
+
+	function selectAll(node, selector, matches) {
+		if (!matches)
+			matches = [];
+		if (selector(node))
+			matches.push(node);
+		var children = parser.query.subnodes(node);
+		if (children) {
+			for (var i=0; i<children.length; i++) {
+				selectAll(children[i], selector, matches);
+			}
+		}
+		return matches;
+	}
+
+	// var selector = parser.query.selector('declarator');
+	var selector = parser.query.selector('declarator[typeAttribute] > type[qualifier=attribute]');
+	var attributes = selectAll(ast, selector);
+	console.log('attributes = ', attributes);
 	t.end();
 });
