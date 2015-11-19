@@ -278,7 +278,7 @@ test('test.glsl', function(t) {
 	t.equal(generated, source, 'Generated code matches');
 
 	var selector = parser.query.selector('declarator[typeAttribute] > type[qualifier=attribute]');
-	var attributes = parser.query.any(ast, selector);
+	var attributes = parser.query.all(ast, selector);
 	t.equal(attributes.length, 3, 'Found all 3 attributes');
 	for (var i=0; i<attributes.length; i++)
 		t.equal(attributes[i].qualifier, 'attribute', 'Found node is attribute');

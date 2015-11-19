@@ -1,5 +1,4 @@
 var subnodes = require('./subnodes');
-//var traversal = require('tree-traversal');
 
 function attr(node, attr) {
 	if (attr in node)
@@ -24,16 +23,10 @@ var factory = require('cssauron')({
 	parent : 'parent',
 	attr: attr,
 	// class: members,
-
-// , contents: 'innerText'
-// , id: 'id'
-// , class: 'className'
-// , parent: 'parentNode'
-// , children: 'childNodes'
-// , attr: 'getAttribute(attr)'
+	// contents: 'name'
 });
 
-function any(node, selector, matches) {
+function all(node, selector, matches) {
 	if (!matches)
 		matches = [];
 	if (selector(node))
@@ -42,16 +35,50 @@ function any(node, selector, matches) {
 	var children = subnodes(node);
 	if (children) {
 		for (var i=0; i<children.length; i++) {
-			any(children[i], selector, matches);
+			all(children[i], selector, matches);
 		}
 	}
 
 	return matches;
 }
 
+function first(node, selector) {
+	if (selector(node))
+		return node;
+
+	for (var i=0; i<node.children.length; i++) {
+		var selected = first(node.children[i], selector);
+		if (selected !== false)
+			return selected;
+	}
+	return false;
+}
+
+function children(node, selector) {
+	var matches = [];
+	for (var i=0; i<node.children.length; i++) {
+		var child = node.children[i];
+		if (selector(child))
+			matches.push(child);
+	}
+	return matches;
+}
+
+function firstChild(node, selector) {
+	for (var i=0; i<node.children.length; i++) {
+		var child = node.children[i];
+		if (selector(child))
+			return child;
+	}
+	return null;
+}
+
 module.exports = {
 	subnodes: subnodes,
 	selector: factory,
-	any: any,
-}
+	all: all,
+	first: first,
+	children: children,
+	firstChild: firstChild
+};
 
