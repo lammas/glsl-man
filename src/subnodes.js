@@ -9,7 +9,7 @@ module.exports = function(node) {
 		if (node[param] instanceof Array) {
 			subnodes = subnodes.concat(node[param]);
 		}
-		else if (typeof(node[param]) == 'object') {
+		else if (node[param]._isNode) {
 			subnodes.push(node[param]);
 		}
 	}

@@ -8625,6 +8625,7 @@ module.exports = (function() {
 
       /** @constructor */
       function node(extraProperties) {
+        this._isNode = true;
         this.id = next_id++;
         for (var prop in extraProperties) {
             if (extraProperties.hasOwnProperty(prop)) {
