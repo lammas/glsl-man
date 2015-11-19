@@ -90,4 +90,3 @@ module.exports = {
 	children: children,
 	firstChild: firstChild
 };
-
