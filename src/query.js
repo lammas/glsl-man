@@ -32,10 +32,10 @@ function all(node, selector, matches) {
 	if (selector(node))
 		matches.push(node);
 
-	var children = subnodes(node);
-	if (children) {
-		for (var i=0; i<children.length; i++) {
-			all(children[i], selector, matches);
+	var nodes = subnodes(node);
+	if (nodes) {
+		for (var i=0; i<nodes.length; i++) {
+			all(nodes[i], selector, matches);
 		}
 	}
 
@@ -46,18 +46,24 @@ function first(node, selector) {
 	if (selector(node))
 		return node;
 
-	for (var i=0; i<node.children.length; i++) {
-		var selected = first(node.children[i], selector);
-		if (selected !== false)
-			return selected;
+	var nodes = subnodes(node);
+	if (nodes) {
+		for (var i=0; i<nodes.length; i++) {
+			var selected = first(nodes[i], selector);
+			if (selected !== false)
+				return selected;
+		}
 	}
 	return false;
 }
 
 function children(node, selector) {
 	var matches = [];
-	for (var i=0; i<node.children.length; i++) {
-		var child = node.children[i];
+	var nodes = subnodes(node);
+	if (!nodes)
+		return matches;
+	for (var i=0; i<nodes.length; i++) {
+		var child = nodes[i];
 		if (selector(child))
 			matches.push(child);
 	}
@@ -65,8 +71,11 @@ function children(node, selector) {
 }
 
 function firstChild(node, selector) {
-	for (var i=0; i<node.children.length; i++) {
-		var child = node.children[i];
+	var nodes = subnodes(node);
+	if (!nodes)
+		return null;
+	for (var i=0; i<nodes.length; i++) {
+		var child = nodes[i];
 		if (selector(child))
 			return child;
 	}
