@@ -22,7 +22,10 @@ module.exports = function(node) {
 			return nodes;
 
 		case 'declarator':
-			return [node.typeAttribute];
+			return [node.typeAttribute].concat(node.declarators);
+
+		case 'declarator_item':
+			return [node.name];
 
 		// TODO: rest of the subnode accessors
 		default:
