@@ -1,32 +1,5 @@
-function subnodes(node) {
-	switch (node.type) {
-		case 'root':
-		case 'scope':
-			return node.statements;
-
-		case 'preprocessor':
-			return node.guarded_statements;
-
-		case 'function_declaration':
-			return [node.body];
-
-		case 'if_statement':
-		case 'for_statement':
-		case 'while_statement':
-		case 'do_statement':
-			var nodes = [node.body];
-			if (node.elseBody)
-				nodes.push(node.elseBody);
-			return nodes;
-
-		case 'declarator':
-			return [node.typeAttribute];
-
-		// TODO: rest of the subnode accessors
-		default:
-			return null;
-	}
-}
+var subnodes = require('./subnodes');
+//var traversal = require('tree-traversal');
 
 function attr(node, attr) {
 	if (attr in node)
@@ -48,6 +21,7 @@ var factory = require('cssauron')({
 	tag: 'type',
 	id: 'id',
 	children: subnodes,
+	parent : 'parent',
 	attr: attr,
 	// class: members,
 
@@ -59,7 +33,25 @@ var factory = require('cssauron')({
 // , attr: 'getAttribute(attr)'
 });
 
+function any(node, selector, matches) {
+	if (!matches)
+		matches = [];
+	if (selector(node))
+		matches.push(node);
+
+	var children = subnodes(node);
+	if (children) {
+		for (var i=0; i<children.length; i++) {
+			any(children[i], selector, matches);
+		}
+	}
+
+	return matches;
+}
+
 module.exports = {
 	subnodes: subnodes,
-	selector: factory
+	selector: factory,
+	any: any,
 }
+

@@ -237,8 +237,6 @@ test('in, out, inout', function(t) {
 	t.end();
 });
 
-// TODO: minification
-
 test('simple.glsl', function(t) {
 	var file = path.join(__dirname, 'simple.glsl');
 	var source = fs.readFileSync(file).toString();
@@ -274,28 +272,15 @@ test('test.glsl', function(t) {
 	var source = fs.readFileSync(file).toString();
 	var ast;
 	t.throws(ast = parser.parse(source), 'Parsed successfully');
-	inspect(ast);
+	//inspect(ast);
 
 	var generated = parser.string(ast);
 	t.equal(generated, source, 'Generated code matches');
 
-	function selectAll(node, selector, matches) {
-		if (!matches)
-			matches = [];
-		if (selector(node))
-			matches.push(node);
-		var children = parser.query.subnodes(node);
-		if (children) {
-			for (var i=0; i<children.length; i++) {
-				selectAll(children[i], selector, matches);
-			}
-		}
-		return matches;
-	}
-
-	// var selector = parser.query.selector('declarator');
 	var selector = parser.query.selector('declarator[typeAttribute] > type[qualifier=attribute]');
-	var attributes = selectAll(ast, selector);
-	console.log('attributes = ', attributes);
+	var attributes = parser.query.any(ast, selector);
+	t.equal(attributes.length, 3, 'Found all 3 attributes');
+	for (var i=0; i<attributes.length; i++)
+		t.equal(attributes[i].qualifier, 'attribute', 'Found node is attribute');
 	t.end();
 });
