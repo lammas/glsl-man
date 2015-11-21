@@ -6,24 +6,12 @@ function attr(node, attr) {
 	return null;
 }
 
-// function members(node) {
-// 	var list = [];
-// 	for (var i in node) {
-// 		if (node.hasOwnProperty(i))
-// 			list.push(i);
-// 	}
-// 	// console.log('members()', node, list);
-// 	return list;
-// }
-
 var factory = require('cssauron')({
 	tag: 'type',
 	id: 'id',
 	children: subnodes,
 	parent : 'parent',
-	attr: attr,
-	// class: members,
-	// contents: 'name'
+	attr: attr
 });
 
 function all(node, selector, matches) {
@@ -57,8 +45,9 @@ function first(node, selector) {
 	return false;
 }
 
-function children(node, selector) {
-	var matches = [];
+function children(node, selector, matches) {
+	if (!matches)
+		matches = [];
 	var nodes = subnodes(node);
 	if (!nodes)
 		return matches;
