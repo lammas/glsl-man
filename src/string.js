@@ -97,7 +97,7 @@ function gen_root(node) {
 function gen_type(node) {
 	if (node.qualifier) {
 		token(node.qualifier);
-		whitespace.space();
+		whitespace.space(true);
 	}
 	token(node.name);
 }
@@ -106,9 +106,9 @@ function gen_preprocessor(node) {
 	switch (node.directive) {
 		case '#define':
 			token(node.directive);
-			whitespace.space();
+			whitespace.space(true);
 			token(node.identifier);
-			whitespace.space();
+			whitespace.space(true);
 			token(node.token_string);
 			whitespace.newline();
 			break;
@@ -118,7 +118,7 @@ function gen_preprocessor(node) {
 		case '#if':
 		case '#elif':
 			token(node.directive);
-			whitespace.space();
+			whitespace.space(true);
 			token(node.value);
 			whitespace.newline();
 			list_statements(node.guarded_statements);
@@ -145,7 +145,7 @@ function gen_preprocessor(node) {
 		case '#error':
 		case '#include':
 			token(node.directive);
-			whitespace.space();
+			whitespace.space(true);
 			token(node.value);
 			whitespace.newline();
 			break;
@@ -162,7 +162,7 @@ function gen_operator(node) {
 
 function gen_declarator(node) {
 	generate(node.typeAttribute);
-	whitespace.space();
+	whitespace.space(true);
 	list_parameters(node.declarators);
 }
 
@@ -238,7 +238,7 @@ function gen_parameter(node) {
 
 function gen_function(node) {
 	generate(node.returnType);
-	whitespace.space();
+	whitespace.space(true);
 	token(node.name);
 	token('(');
 	list_parameters(node.parameters);
@@ -298,9 +298,9 @@ function gen_bool(node) {
 
 function gen_precision(node) {
 	token(node.type);
-	whitespace.space();
+	whitespace.space(true);
 	token(node.precision);
-	whitespace.space();
+	whitespace.space(true);
 	token(node.typeName);
 }
 
@@ -331,7 +331,7 @@ function gen_if_statement(node, isElseIf) {
 
 function gen_return(node) {
 	token('return');
-	whitespace.space();
+	whitespace.space(true);
 	generate(node.value);
 }
 
