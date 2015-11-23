@@ -98,9 +98,10 @@ test('Precision', function(t) {
 
 test('Attributes, Uniforms, Varyings', function(t) {
 	var sources = {
-		'Attributes': 'attribute vec3 position;\n',
-		'Uniforms': 'uniform mat4 projection;\n',
-		'Varyings': 'varying vec2 uv0;\n',
+		'Attribute': 'attribute vec3 position;\n',
+		'Uniform': 'uniform mat4 projection;\n',
+		'Uniform with precision': 'uniform mediump vec3 scale;\n',
+		'Varying': 'varying vec2 uv0;\n',
 	};
 	var ast;
 	for (var name in sources) {

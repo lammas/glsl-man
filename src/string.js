@@ -99,6 +99,10 @@ function gen_type(node) {
 		token(node.qualifier);
 		whitespace.space(true);
 	}
+	if (node.precision) {
+		token(node.precision);
+		whitespace.space(true);
+	}
 	token(node.name);
 }
 
