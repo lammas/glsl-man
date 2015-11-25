@@ -1,6 +1,6 @@
 {
   "name": "glsl-man",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "GLSL parser and code generator based on Google's glsl-unit grammar",
   "main": "index.js",
   "scripts": {
