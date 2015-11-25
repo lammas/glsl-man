@@ -57,6 +57,12 @@ var uniforms = glsl.query.all(
 	}
 ```
 
+
+* `glsl.wrap(ASTNode)` - Wraps the given node in a 'root' scope. Useful for
+  generating valid code from arbitrary AST subnodes.
+  - *ASTNode* - Any node from the tree returned by `parse(string)`
+
+
 ### Querying
 
 * `glsl.query.selector(string)` - Returns a selector

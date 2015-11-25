@@ -10,5 +10,6 @@ function parse(source) {
 module.exports = {
 	parse: parse,
 	string: require('./src/string'),
-	query: require('./src/query')
+	query: require('./src/query'),
+	wrap: require('./src/wrap')
 };
