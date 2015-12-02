@@ -14,10 +14,19 @@ const float magicValue = 4.2;
 varying vec2 uv0;
 vec4 lighting() {
 	vec4 textureColor = texture2D(diffuse0, uv0);
+#ifdef DISABLE_RED
+	textureColor.r = 0.0;
+#endif
 	return textureColor;
 }
 void fragment() {
 	vec4 color = lighting();
+	if (color.r > 0.0) {
+		color.g *= 0.5;
+#ifdef FOO
+		color.g = 0.0;
+#endif
+	}
 	gl_FragColor = clamp(color, 0.0, 1.0);
 }
 void vertex() {

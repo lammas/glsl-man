@@ -73,7 +73,8 @@ function list_statements(a) {
 	for (var i=0; i<a.length; i++) {
 		if (a[i].type == 'expression' && !a[i].expression)
 			continue;
-		whitespace.tab();
+		if (a[i].type != 'preprocessor')
+			whitespace.tab();
 		generate(a[i]);
 		if (!(a[i].type in noTerminator))
 			whitespace.terminateLine();
