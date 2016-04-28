@@ -12,59 +12,73 @@ function inspect(o) {
 test('Preprocess: #define', function(t) {
 	var ast;
 	var source = '#define FOO 1\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('Preprocess: #undef', function(t) {
 	var ast;
 	var source = '#undef FOO\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('Preprocess: #ifdef', function(t) {
 	var ast;
 	var source = '#ifdef GL_ES\nprecision highp vec3;\n#endif\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('Preprocess: #ifndef', function(t) {
 	var ast;
 	var source = '#ifndef GL_ES\nprecision mediump vec3;\n#endif\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('Preprocess: #if-else', function(t) {
 	var ast;
 	var source = '#ifdef FOO\nconst float foo = 1.0;\n#else\nconst float foo = 0.5;\n#endif\n';
-	t.throws(ast = glsl.parse(source), '#ifdef - Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, '#ifdef - Parsed successfully');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, '#ifdef - Generated code matches');
+	t.equal(generated, source, '#ifdef - Generated code OK');
 
 	source = '#if FOO == 1\nconst float foo = 1.0;\n#else\nconst float foo = 0.5;\n#endif\n';
-	t.throws(ast = glsl.parse(source), '#if - Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, '#if - Parsed successfully');
 	generated = glsl.string(ast);
-	t.equal(generated, source, '#if - Generated code matches');
+	t.equal(generated, source, '#if - Generated code OK');
 	t.end();
 });
 
 test('Preprocess: #if-elif-else', function(t) {
 	var ast;
 	var source = '#if FOO == 1\nconst float foo = 1.0;\n#elif FOO == 2\nconst float foo = 1.0;\n#else\nconst float foo = 0.0;\n#endif\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
@@ -80,9 +94,11 @@ test('Preprocess: #version, #pragma, #extension, #error, #line, #include', funct
 	var ast;
 	for (var name in sources) {
 		var source = sources[name];
-		t.throws(ast = glsl.parse(source), name + ' - Parsed successfully');
+		t.doesNotThrow(function() {
+			ast = glsl.parse(source);
+		}, name + ' - Parsed successfully');
 		var generated = glsl.string(ast);
-		t.equal(generated, source, name + ' - Generated code matches');
+		t.equal(generated, source, name + ' - Generated code OK');
 	}
 	t.end();
 });
@@ -90,9 +106,11 @@ test('Preprocess: #version, #pragma, #extension, #error, #line, #include', funct
 test('Precision', function(t) {
 	var ast;
 	var source = 'precision highp float;\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
@@ -106,9 +124,11 @@ test('Attributes, Uniforms, Varyings', function(t) {
 	var ast;
 	for (var name in sources) {
 		var source = sources[name];
-		t.throws(ast = glsl.parse(source), name + ' - Parsed successfully');
+		t.doesNotThrow(function() {
+			ast = glsl.parse(source);
+		}, name + ' - Parsed successfully');
 		var generated = glsl.string(ast);
-		t.equal(generated, source, name + ' - Generated code matches');
+		t.equal(generated, source, name + ' - Generated code OK');
 	}
 	t.end();
 });
@@ -116,99 +136,121 @@ test('Attributes, Uniforms, Varyings', function(t) {
 test('Nested expressions', function(t) {
 	var ast;
 	var source = 'float a = (-x - zmin) / (zmax - zmin);\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('Ternary expression', function(t) {
 	var ast;
 	var source = 'float a = b ? 1.0 : 0.0;\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('if', function(t) {
 	var ast;
 	var source = 'void main() {\n\tif (a < 0.5) {\n\t\ta /= 4.0;\n\t}\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('if-else', function(t) {
 	var ast;
 	var source = 'void main() {\n\tif (a < 0.5) {\n\t\ta *= 4.0;\n\t}\n\telseif (a > 0.5) {\n\t\ta /= 2.0;\n\t}\n\telse {\n\t\ta = 0.0;\n\t}\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('for', function(t) {
 	var ast;
 	var source = 'void main() {\n\tint sum = 0;\n\tfor (int i = 0; i < 4; i++) {\n\t\tsum++;\n\t}\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('while', function(t) {
 	var ast;
 	var source = 'void main() {\n\tint sum = 10;\n\twhile (sum > 0) {\n\t\t--sum;\n\t}\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('do-while', function(t) {
 	var ast;
 	var source = 'void main() {\n\tint sum = 10;\n\tdo {\n\t\t--sum;\n\t} while (sum > 0);\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('continue', function(t) {
 	var ast;
 	var source = 'void main() {\n\tint sum = 0;\n\tfor (int i = 0; i < 4; i++) {\n\t\tcontinue;\n\t}\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('break', function(t) {
 	var ast;
 	var source = 'void main() {\n\tint sum = 0;\n\tfor (int i = 0; i < 4; i++) {\n\t\tbreak;\n\t}\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('discard', function(t) {
 	var ast;
 	var source = 'void main() {\n\tdiscard;\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
 test('return', function(t) {
 	var ast;
 	var source = 'float f() {\n\treturn 0.5;\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
@@ -222,9 +264,11 @@ test('Literals', function(t) {
 	var ast;
 	for (var name in sources) {
 		var source = sources[name];
-		t.throws(ast = glsl.parse(source), name + ' - Parsed successfully');
+		t.doesNotThrow(function() {
+			ast = glsl.parse(source);
+		}, name + ' - Parsed successfully');
 		var generated = glsl.string(ast);
-		t.equal(generated, source, name + ' - Generated code matches');
+		t.equal(generated, source, name + ' - Generated code OK');
 	}
 	t.end();
 });
@@ -232,9 +276,11 @@ test('Literals', function(t) {
 test('in, out, inout', function(t) {
 	var ast;
 	var source = 'float f(const in vec3 a, out vec3 b, inout float c) {\n\tb = a * vec3(c);\n\treturn c * 0.5;\n}\n';
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
@@ -242,9 +288,11 @@ test('simple.glsl', function(t) {
 	var file = path.join(__dirname, 'simple.glsl');
 	var source = fs.readFileSync(file).toString();
 	var ast;
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
@@ -252,9 +300,11 @@ test('test.glsl', function(t) {
 	var file = path.join(__dirname, 'test.glsl');
 	var source = fs.readFileSync(file).toString();
 	var ast;
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
@@ -262,9 +312,11 @@ test('diffuse.frag', function(t) {
 	var file = path.join(__dirname, 'diffuse.frag');
 	var source = fs.readFileSync(file).toString();
 	var ast;
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 
@@ -272,10 +324,12 @@ test('test.glsl', function(t) {
 	var file = path.join(__dirname, 'test.glsl');
 	var source = fs.readFileSync(file).toString();
 	var ast;
-	t.throws(ast = glsl.parse(source), 'Parsed successfully');
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
 
 	var generated = glsl.string(ast);
-	t.equal(generated, source, 'Generated code matches');
+	t.equal(generated, source, 'Generated code OK');
 
 	var selector = glsl.query.selector('declarator[typeAttribute] > type[qualifier=attribute]');
 	var attributes = glsl.query.all(ast, selector);
