@@ -17,6 +17,13 @@ test('Preprocess: #define', function(t) {
 	}, 'Parsing OK');
 	var generated = glsl.string(ast);
 	t.equal(generated, source, 'Generated code OK');
+
+	source = '#define FEATURE_ENABLED\n';
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
+	generated = glsl.string(ast);
+	t.equal(generated, source, 'Generated code OK');
 	t.end();
 });
 

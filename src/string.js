@@ -113,8 +113,10 @@ function gen_preprocessor(node) {
 			token(node.directive);
 			whitespace.space(true);
 			token(node.identifier);
-			whitespace.space(true);
-			token(node.token_string);
+			if (node.token_string.length > 0) {
+				whitespace.space(true);
+				token(node.token_string);
+			}
 			whitespace.newline();
 			break;
 
