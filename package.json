@@ -4,7 +4,8 @@
   "description": "GLSL parser and code generator based on Google's glsl-unit grammar",
   "main": "index.js",
   "scripts": {
-    "test": "node test/index | tap-spec"
+    "test": "node test/index | tap-spec",
+    "peg": "pegjs peg/glsl.pegjs src/parser.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,6 @@
   },
   "homepage": "https://github.com/lammas/glsl-man#readme",
   "devDependencies": {
-    "gulp": "^3.9.0",
     "pegjs": "^0.9.0",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.2"
