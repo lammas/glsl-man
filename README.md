@@ -1,9 +1,13 @@
 # GLSL manipulator
 GLSL parser and code generator based on Google's glsl-unit grammar.
 
+[![NPM](https://nodei.co/npm/glsl-man.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/glsl-man/)
+
 ## Install
 
-		npm install glsl-man
+```sh
+npm install glsl-man
+```
 
 ## Usage
 
