@@ -352,3 +352,13 @@ test('test.glsl', function(t) {
 	}
 	t.end();
 });
+
+test('Float constant parsing', function(t) {
+	var file = path.join(__dirname, 'float_const.glsl');
+	var source = fs.readFileSync(file).toString();
+	var ast;
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
+	t.end();
+});

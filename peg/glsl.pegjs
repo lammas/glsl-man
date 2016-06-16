@@ -754,7 +754,7 @@ int_constant
     }
 
 float_constant
-  = digits:([0-9]*"."[0-9]+float_exponent? / [0-9]+"."[0-9]*float_exponent?)
+  = digits:([\-0-9]*"."[0-9]+float_exponent? / [0-9]+"."[0-9]*float_exponent?)
     {
       digits[0] = digits[0].join("");
       digits[2] = digits[2].join("");
