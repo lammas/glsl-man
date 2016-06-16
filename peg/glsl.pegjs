@@ -728,7 +728,7 @@ single_underscore_identifier
   = [A-Za-z0-9]* "_" [A-Za-z0-9]+
 
 int_constant
-  = head:[1-9] tail:[0-9]* {
+  = head:[\-1-9] tail:[0-9]* {
       return new node({
         type: "int",
         value: parseInt([head].concat(tail).join(""), 10)
