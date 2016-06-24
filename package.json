@@ -12,8 +12,8 @@
     "url": "git+https://github.com/lammas/glsl-man.git"
   },
   "keywords": [
-    "FRAK",
-    "GLSL",
+    "frak",
+    "glsl",
     "parser"
   ],
   "author": "lammas",
