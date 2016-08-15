@@ -1,4 +1,5 @@
 var Whitespace = require('./whitespace');
+var wrap = require('./wrap');
 
 var output = [];
 var whitespace = null;
@@ -78,6 +79,19 @@ function list_statements(a) {
 		generate(a[i]);
 		if (!(a[i].type in noTerminator))
 			whitespace.terminateLine();
+	}
+}
+
+function statement_body(node) {
+	if (node.type == 'scope') {
+		whitespace.space();
+		generate(node);
+	}
+	else {
+		whitespace.newline();
+		whitespace.indent();
+		generate(wrap(node));
+		whitespace.dedent();
 	}
 }
 
@@ -314,15 +328,14 @@ function gen_precision(node) {
 function gen_if_statement(node, isElseIf) {
 	if (isElseIf) {
 		whitespace.tab();
-		token('elseif');
+		token('else if');
 	}
 	else token('if');
 	whitespace.space();
 	token('(');
 	generate(node.condition);
 	token(')');
-	whitespace.space();
-	generate(node.body);
+	statement_body(node.body);
 	if (node.elseBody) {
 		if (node.elseBody.type == 'if_statement') {
 			gen_if_statement(node.elseBody, true);
@@ -330,8 +343,7 @@ function gen_if_statement(node, isElseIf) {
 		else {
 			whitespace.tab();
 			token('else');
-			whitespace.space();
-			generate(node.elseBody);
+			statement_body(node.elseBody);
 		}
 	}
 }
@@ -366,8 +378,7 @@ function gen_for_statement(node) {
 	whitespace.space();
 	generate(node.increment);
 	token(')');
-	whitespace.space();
-	generate(node.body);
+	statement_body(node.body);
 }
 
 function gen_while_statement(node) {
@@ -376,8 +387,7 @@ function gen_while_statement(node) {
 	token('(');
 	generate(node.condition);
 	token(')');
-	whitespace.space();
-	generate(node.body);
+	statement_body(node.body);
 }
 
 function gen_do_statement(node) {

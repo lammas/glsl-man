@@ -175,7 +175,7 @@ test('if', function(t) {
 
 test('if-else', function(t) {
 	var ast;
-	var source = 'void main() {\n\tif (a < 0.5) {\n\t\ta *= 4.0;\n\t}\n\telseif (a > 0.5) {\n\t\ta /= 2.0;\n\t}\n\telse {\n\t\ta = 0.0;\n\t}\n}\n';
+	var source = 'void main() {\n\tif (a < 0.5) {\n\t\ta *= 4.0;\n\t}\n\telse if (a > 0.5) {\n\t\ta /= 2.0;\n\t}\n\telse {\n\t\ta = 0.0;\n\t}\n}\n';
 	t.doesNotThrow(function() {
 		ast = glsl.parse(source);
 	}, 'Parsing OK');
@@ -360,5 +360,19 @@ test('Negative int/float constant parsing', function(t) {
 	t.doesNotThrow(function() {
 		ast = glsl.parse(source);
 	}, 'Parsing OK');
+	t.end();
+});
+
+test('Implied scope', function(t) {
+	var file = path.join(__dirname, 'scope.glsl');
+	var source = fs.readFileSync(file).toString();
+	var ast;
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
+
+	var generated = glsl.string(ast);
+	t.equal(generated, source, 'Generated code OK');
+
 	t.end();
 });
