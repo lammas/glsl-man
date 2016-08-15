@@ -28,7 +28,8 @@
     "tape": "^4.2.2"
   },
   "dependencies": {
-    "cssauron": "^1.2.0",
+    "cssauron": "^1.4.0",
+    "tape": "^4.6.0",
     "tree-traversal": "^1.1.1"
   }
 }
