@@ -376,3 +376,17 @@ test('Implied scope', function(t) {
 
 	t.end();
 });
+
+test('Arrays', function(t) {
+	var file = path.join(__dirname, 'array.glsl');
+	var source = fs.readFileSync(file).toString();
+	var ast;
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
+
+	var generated = glsl.string(ast);
+	t.equal(generated, source, 'Generated code OK');
+
+	t.end();
+});
