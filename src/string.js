@@ -189,6 +189,11 @@ function gen_declarator(node) {
 
 function gen_declarator_item(node) {
 	generate(node.name);
+	if ('arraySize' in node) {
+		token('[');
+		generate(node.arraySize);
+		token(']');
+	}
 	if ('initializer' in node) {
 		whitespace.space();
 		token('=');
