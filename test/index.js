@@ -390,3 +390,20 @@ test('Arrays', function(t) {
 
 	t.end();
 });
+
+test('Minification with defines', function(t) {
+	var source = '#define SOMEVALUE 1\nuniform vec3 color;';
+	var ast;
+	t.doesNotThrow(function() {
+		ast = glsl.parse(source);
+	}, 'Parsing OK');
+
+	var generated = glsl.string(ast, {
+		tab: '',
+		space: '',
+		newline: ''
+	});
+	t.equal(generated, source, 'Generated code OK');
+
+	t.end();
+});

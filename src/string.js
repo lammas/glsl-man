@@ -131,7 +131,7 @@ function gen_preprocessor(node) {
 				whitespace.space(true);
 				token(node.token_string);
 			}
-			whitespace.newline();
+			whitespace.newline(true);
 			break;
 
 		case '#ifdef':
@@ -141,21 +141,21 @@ function gen_preprocessor(node) {
 			token(node.directive);
 			whitespace.space(true);
 			token(node.value);
-			whitespace.newline();
+			whitespace.newline(true);
 			list_statements(node.guarded_statements);
 			if ('elseBody' in node)
 				generate(node.elseBody);
 			else {
 				token('#endif');
-				whitespace.newline();
+				whitespace.newline(true);
 			}
 			break;
 		case '#else':
 			token(node.directive);
-			whitespace.newline();
+			whitespace.newline(true);
 			list_statements(node.guarded_statements);
 			token('#endif');
-			whitespace.newline();
+			whitespace.newline(true);
 			break;
 
 		case '#version':
@@ -168,7 +168,7 @@ function gen_preprocessor(node) {
 			token(node.directive);
 			whitespace.space(true);
 			token(node.value);
-			whitespace.newline();
+			whitespace.newline(true);
 			break;
 	}
 }

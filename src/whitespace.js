@@ -24,13 +24,15 @@ var Whitespace = function(options, token) {
 	this.tabcache = [''];
 }
 
-Whitespace.prototype.space = function (hard) {
-	if (hard)
+Whitespace.prototype.space = function (force) {
+	if (force)
 		return this.token(' ');
 	return this.token(this.options.space);
 };
 
-Whitespace.prototype.newline = function () {
+Whitespace.prototype.newline = function (force) {
+	if (force)
+		return this.token('\n');
 	return this.token(this.options.newline);
 };
 
