@@ -703,7 +703,7 @@ type_name "type name"
     }
 
 identifier "identifier"
-  = !(keyword [^A-Za-z_0-9]) head:[A-Za-z_] tail:[A-Za-z_0-9]* {
+  = !(keyword [^A-Za-z_0-9]) head:[\$A-Za-z_] tail:[\$A-Za-z_0-9]* {
      return new node({
        type: "identifier",
        name: head + tail.join("")
