@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test/index | tap-spec",
-    "peg": "pegjs peg/glsl.pegjs src/parser.js"
+    "peg": "pegjs --output src/parser.js peg/glsl.pegjs"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/lammas/glsl-man#readme",
   "devDependencies": {
-    "pegjs": "^0.9.0",
+    "pegjs": "^0.10.0",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.2"
   },
