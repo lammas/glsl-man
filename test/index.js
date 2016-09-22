@@ -118,6 +118,12 @@ test('Attributes, Uniforms, Varyings', function(t) {
 	t.end();
 });
 
+test('$ in identifier (template var)', function(t) {
+	var source = 'void main() {\n\tint sum = 10 + $templateVar;\n}\n';
+	parseTest(t, source);
+	t.end();
+});
+
 test('Nested expressions', function(t) {
 	var source = 'float a = (-x - zmin) / (zmax - zmin);\n';
 	parseTest(t, source);
