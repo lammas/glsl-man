@@ -50,6 +50,7 @@ function gen_bool(node) {
 }
 
 var noTerminator = {
+	'root': true,
 	'preprocessor': true,
 	'function_declaration' : true,
 	'if_statement' : true,

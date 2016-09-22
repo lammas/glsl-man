@@ -11,5 +11,6 @@ module.exports = {
 	parse: parse,
 	string: require('./src/string'),
 	query: require('./src/query'),
+	mod: require('./src/mod'),
 	wrap: require('./src/wrap')
 };

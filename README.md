@@ -3,13 +3,17 @@ GLSL parser and code generator based on Google's glsl-unit grammar.
 
 [![NPM](https://nodei.co/npm/glsl-man.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/glsl-man/)
 
+
 ## Install
 
 ```sh
 npm install glsl-man
 ```
 
+
+
 ## Usage
+
 
 ### Parsing
 
@@ -18,6 +22,7 @@ var glsl = require('glsl-man');
 var ast = glsl.parse(source);
 ```
 
+
 ### Deparsing
 
 ```javascript
@@ -25,6 +30,7 @@ var glsl = require('glsl-man');
 var ast = glsl.parse(source);
 var generated = glsl.string(ast);
 ```
+
 
 ### Querying
 
@@ -36,7 +42,10 @@ var uniforms = glsl.query.all(
 	glsl.query.selector('declarator[typeAttribute] > type[qualifier=uniform]'));
 ```
 
+
+
 ## API
+
 
 ### Parsing
 
@@ -97,3 +106,30 @@ var uniforms = glsl.query.all(
 
 * `glsl.query.subnodes(node)` - Returns a list of all subnodes of the given node that can be further traversed
   - *node* - AST node
+
+
+### Modifying
+
+* `glsl.mod.find(node)` - Returns an object with `index` and `statements` keys.
+  - *node* - AST node
+
+
+* `glsl.mod.remove(node)` - Removes the given node from it's AST.
+  - *node* - AST node
+
+
+* `glsl.mod.replace(node, newNode)` - Replaces the given node with `newNode`.
+  - *node* - AST node
+  - *newNode* - AST node or Array of AST nodes
+
+
+* `glsl.mod.add(node, newNode, after)` - Inserts `newNode` before or after `node`.
+  - *node* - AST node
+  - *newNode* - AST node or Array of AST nodes
+  - *after* - (optional) Boolean
+
+
+* `glsl.mod.addBefore(node, newNode)` - Shortcut to `glsl.mod.add`.
+
+
+* `glsl.mod.addAfter(node, newNode)` - Shortcut to `glsl.mod.add`.
