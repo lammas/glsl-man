@@ -83,12 +83,14 @@ function list_statements(a) {
 	}
 }
 
-function statement_body(node) {
+function statement_body(node, forceSpace) {
 	if (node.type == 'scope') {
 		whitespace.space();
 		generate(node);
 	}
 	else {
+		if (forceSpace)
+			whitespace.space(true);
 		whitespace.newline();
 		whitespace.indent();
 		generate(wrap(node));
@@ -349,7 +351,8 @@ function gen_if_statement(node, isElseIf) {
 		else {
 			whitespace.tab();
 			token('else');
-			statement_body(node.elseBody);
+			// Only force space after statement if newlines are stripped
+			statement_body(node.elseBody, whitespace.options.newline == '');
 		}
 	}
 }

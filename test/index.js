@@ -288,6 +288,25 @@ test('Arrays', function(t) {
 	t.end();
 });
 
+test('Minification', function(t) {
+	const src = `
+	void main() {
+		int a = 1;
+		int b = 2;
+		int c = 0;
+
+		if (a < b)
+			c = a;
+		else
+			c = b;
+	}`;
+
+	const ast = glsl.parse(src);
+	const str = glsl.string(ast, {tab:'', space:'', newline:''});
+	t.equals(str, 'void main(){int a=1;int b=2;int c=0;if(a<b)c=a;else c=b;}', 'Generated code OK');
+	t.end();
+});
+
 test('Minification with defines', function(t) {
 	var source = '#define SOMEVALUE 1\nuniform vec3 color;';
 	var ast;
