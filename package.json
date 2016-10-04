@@ -25,11 +25,10 @@
   "devDependencies": {
     "pegjs": "^0.10.0",
     "tap-spec": "^4.1.0",
-    "tape": "^4.2.2"
+    "tape": "^4.6.2"
   },
   "dependencies": {
     "cssauron": "^1.4.0",
-    "tape": "^4.6.0",
     "tree-traversal": "^1.1.1"
   }
 }
