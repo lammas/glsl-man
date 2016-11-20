@@ -181,7 +181,14 @@ module.exports = function(Common) {
 	vec3 normal;
 };
 `;
-		Common.parseTest(t, source);
+		Common.parseTest(t, source, 'Struct');
+
+		var source = `struct Value {
+	vec3 position;
+	vec3 normal;
+} variableName;
+`;
+		Common.parseTest(t, source, 'Struct with variable name');
 		t.end();
 	});
 };

@@ -296,6 +296,11 @@ function gen_struct_definition(node) {
 	whitespace.dedent();
 	whitespace.tab();
 	token('}');
+	if ('declarators' in node && node.declarators.length > 0) {
+		whitespace.space();
+		var declarator = node.declarators[0];
+		generate(declarator);
+	}
 }
 
 function gen_scope(node, noNewline) {
