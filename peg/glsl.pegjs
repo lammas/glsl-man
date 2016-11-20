@@ -763,7 +763,7 @@ float_constant
         value:parseFloat(digits.join(""))
       });
     }
-  / digits:([0-9]+float_exponent) {
+  / digits:([\-0-9]+float_exponent) {
       return new node({
         type: "float",
         value: parseFloat(digits[0].join("") + digits[1])
