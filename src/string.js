@@ -298,8 +298,7 @@ function gen_struct_definition(node) {
 	token('}');
 	if ('declarators' in node && node.declarators.length > 0) {
 		whitespace.space();
-		var declarator = node.declarators[0];
-		generate(declarator);
+		list_parameters(node.declarators);
 	}
 }
 

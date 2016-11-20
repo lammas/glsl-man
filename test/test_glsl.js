@@ -189,6 +189,13 @@ module.exports = function(Common) {
 } variableName;
 `;
 		Common.parseTest(t, source, 'Struct with variable name');
+
+		var source = `struct Value {
+	vec3 position;
+	vec3 normal;
+} var1, var2, var3;
+`;
+		Common.parseTest(t, source, 'Struct with multiple variable names');
 		t.end();
 	});
 };
