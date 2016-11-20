@@ -174,4 +174,14 @@ module.exports = function(Common) {
 		Common.parseTest(t, 'float f = -2e-9;\n', 'Value: -2e-9');
 		t.end();
 	});
+
+	test('Structs', function(t) {
+		var source = `struct Value {
+	vec3 position;
+	vec3 normal;
+};
+`;
+		Common.parseTest(t, source);
+		t.end();
+	});
 };

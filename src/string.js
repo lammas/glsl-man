@@ -21,6 +21,7 @@ var types = {
 	'parameter': gen_parameter,
 	'function_declaration': gen_function,
 	'function_call': gen_function_call,
+	'struct_definition': gen_struct_definition,
 	'scope': gen_scope,
 	'declarator': gen_declarator,
 	'declarator_item': gen_declarator_item,
@@ -281,6 +282,20 @@ function gen_function_call(node) {
 	token('(');
 	list_parameters(node.parameters);
 	token(')');
+}
+
+function gen_struct_definition(node) {
+	token('struct');
+	whitespace.space(true);
+	token(node.name)
+	whitespace.space();
+	token('{');
+	whitespace.newline();
+	whitespace.indent();
+	list_statements(node.members);
+	whitespace.dedent();
+	whitespace.tab();
+	token('}');
 }
 
 function gen_scope(node, noNewline) {

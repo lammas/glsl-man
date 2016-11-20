@@ -1,5 +1,6 @@
 'use strict';
 
+var util = require('util');
 var glsl = require('../index');
 
 var Common = {
