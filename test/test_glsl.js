@@ -37,6 +37,12 @@ module.exports = function(Common) {
 		t.end();
 	});
 
+	test('Sequence expressions', function(t) {
+		var source = 'float b(vec3 e, vec3 x, float v) {\n\tfloat n = 1.0;\n\tv *= 10.6;\n\tfloat t = 0.16 / v, y = 2.0 * v;\n\tfor (int i = 0; i < 5; ++i)\n\t\tn -= ((y - l(e + (x * y)).x) * t), y += v, t *= 0.5;\n\treturn clamp(n, 0.0, 1.0);\n}\n';
+		Common.parseTest(t, source);
+		t.end();
+	});
+
 	test('Nested expressions', function(t) {
 		var source = 'float a = (-x - zmin) / (zmax - zmin);\n';
 		Common.parseTest(t, source);

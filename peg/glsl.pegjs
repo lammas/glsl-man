@@ -342,6 +342,7 @@ simple_statement
   / jump_statement
   / preprocessor_define
   / preprocessor_operator
+  / sequence_expression
   / macro_call) {
     return statement;
   }
@@ -432,6 +433,14 @@ expression_statement
         expression: e
       });
   }
+
+sequence_expression
+  = head:assignment_expression tail:(comma assignment_expression)* {
+      return new node({
+        type: "sequence",
+        expressions: [ head ].concat(tail.map(function(item) { return item[1] }))
+      })
+    }
 
 declaration "declaration"
   = function_prototype:function_prototype semicolon {
