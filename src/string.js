@@ -26,6 +26,7 @@ var types = {
 	'declarator': gen_declarator,
 	'declarator_item': gen_declarator_item,
 	'expression': gen_expression,
+	'sequence': gen_sequence,
 	'binary': gen_binary,
 	'unary': gen_unary,
 	'ternary': gen_ternary,
@@ -208,6 +209,15 @@ function gen_declarator_item(node) {
 
 function gen_expression(node) {
 	generate(node.expression);
+}
+
+function gen_sequence(node) {
+	a = node.expressions
+	for (var i=0; i<a.length; i++) {
+		generate(a[i]);
+		if (i < a.length-1)
+			whitespace.separator();
+	}
 }
 
 function gen_binary(node) {
