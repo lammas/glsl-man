@@ -65,6 +65,12 @@ function token(s) {
 	output.push(s);
 }
 
+function last_token() {
+	if (output.length == 0)
+		return null;
+	return output[output.length - 1];
+}
+
 function list_parameters(a) {
 	for (var i=0; i<a.length; i++) {
 		generate(a[i]);
@@ -127,6 +133,9 @@ function gen_type(node) {
 }
 
 function gen_preprocessor(node) {
+	if (last_token() != null && last_token() != '\n')
+		whitespace.newline(true);
+
 	switch (node.directive) {
 		case '#define':
 			token(node.directive);
@@ -151,6 +160,8 @@ function gen_preprocessor(node) {
 			if ('elseBody' in node)
 				generate(node.elseBody);
 			else {
+				if (last_token() != null && last_token() != '\n')
+					whitespace.newline(true);
 				token('#endif');
 				whitespace.newline(true);
 			}
@@ -159,6 +170,8 @@ function gen_preprocessor(node) {
 			token(node.directive);
 			whitespace.newline(true);
 			list_statements(node.guarded_statements);
+			if (last_token() != null && last_token() != '\n')
+				whitespace.newline(true);
 			token('#endif');
 			whitespace.newline(true);
 			break;

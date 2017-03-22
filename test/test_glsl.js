@@ -170,6 +170,40 @@ module.exports = function(Common) {
 		t.end();
 	});
 
+	test('Minification with ifdef-endif', function(t) {
+		var source = '#ifdef MAGIC\nconst float magicValue=4.2;\n#endif\n';
+		var ast;
+		t.doesNotThrow(function() {
+			ast = glsl.parse(source);
+		}, 'Parsing OK');
+
+		var generated = glsl.string(ast, {
+			tab: '',
+			space: '',
+			newline: ''
+		});
+		t.equal(generated, source, 'Generated code OK');
+
+		t.end();
+	});
+
+	test('Minification with ifdef-else-endif', function(t) {
+		var source = '#ifdef MAGIC\nconst float magicValue=4.2;\n#else\nconst float magicValue=0.0;\n#endif\n';
+		var ast;
+		t.doesNotThrow(function() {
+			ast = glsl.parse(source);
+		}, 'Parsing OK');
+
+		var generated = glsl.string(ast, {
+			tab: '',
+			space: '',
+			newline: ''
+		});
+		t.equal(generated, source, 'Generated code OK');
+
+		t.end();
+	});
+
 	test('Float constants', function(t) {
 		Common.parseTest(t, 'float f = 1.0;\n', 'Value: 1.0');
 		Common.parseTest(t, 'float f = 2.321;\n', 'Value: 2.321');
