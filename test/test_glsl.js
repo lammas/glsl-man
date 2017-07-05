@@ -38,7 +38,15 @@ module.exports = function(Common) {
 	});
 
 	test('Sequence expressions', function(t) {
-		var source = 'float b(vec3 e, vec3 x, float v) {\n\tfloat n = 1.0;\n\tv *= 10.6;\n\tfloat t = 0.16 / v, y = 2.0 * v;\n\tfor (int i = 0; i < 5; ++i)\n\t\tn -= ((y - l(e + (x * y)).x) * t), y += v, t *= 0.5;\n\treturn clamp(n, 0.0, 1.0);\n}\n';
+		var source = `float b(vec3 e, vec3 x, float v) {
+	float n = 1.0;
+	v *= 10.6;
+	float t = 0.16 / v, y = 2.0 * v;
+	for (int i = 0; i < 5; ++i)
+		n -= ((y - l(e + (x * y)).x) * t), y += v, t *= 0.5;
+	return clamp(n, 0.0, 1.0);
+}
+`;
 		Common.parseTest(t, source);
 		t.end();
 	});
@@ -241,6 +249,23 @@ module.exports = function(Common) {
 
 	test('Unary operator after return', function(t) {
 		var source = 'float test(){return -pow(1,2);}';
+		var ast;
+		t.doesNotThrow(function() {
+			ast = glsl.parse(source);
+		}, 'Parsing OK');
+
+		var generated = glsl.string(ast, {
+			tab: '',
+			space: '',
+			newline: ''
+		});
+		t.equal(generated, source, 'Generated code OK');
+
+		t.end();
+	});
+
+	test('Parens with postfix operator', function(t) {
+		var source = "void main(){global=(viewinvmat*vec4(local,1.0)).xyz;}";
 		var ast;
 		t.doesNotThrow(function() {
 			ast = glsl.parse(source);

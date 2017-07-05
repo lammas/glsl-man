@@ -61,6 +61,11 @@ var noTerminator = {
 	'scope': true
 };
 
+var noParens = {
+	'identifier': true,
+	'function_call': true,
+}
+
 function token(s) {
 	output.push(s);
 }
@@ -338,7 +343,15 @@ function gen_scope(node, noNewline) {
 }
 
 function gen_postfix(node) {
-	generate(node.expression);
+	if (node.expression.type in noParens) {
+		generate(node.expression);
+	}
+	else {
+		token('(');
+		generate(node.expression);
+		token(')');
+	}
+
 	generate(node.operator);
 }
 
