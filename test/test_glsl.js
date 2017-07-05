@@ -265,7 +265,8 @@ module.exports = function(Common) {
 	});
 
 	test('Parens with postfix operator', function(t) {
-		var source = "void main(){global=(viewinvmat*vec4(local,1.0)).xyz;}";
+		var source = 'void main(){global=(viewinvmat*vec4(local,1.0)).xyz;}';
 		Common.parseTestMinified(t, source);
+		t.end();
 	});
 };
