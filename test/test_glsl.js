@@ -238,4 +238,21 @@ module.exports = function(Common) {
 		Common.parseTest(t, source, 'Struct with multiple variable names');
 		t.end();
 	});
+
+	test('Unary operator after return', function(t) {
+		var source = 'float test(){return -pow(1,2);}';
+		var ast;
+		t.doesNotThrow(function() {
+			ast = glsl.parse(source);
+		}, 'Parsing OK');
+
+		var generated = glsl.string(ast, {
+			tab: '',
+			space: '',
+			newline: ''
+		});
+		t.equal(generated, source, 'Generated code OK');
+
+		t.end();
+	});
 };
