@@ -266,18 +266,6 @@ module.exports = function(Common) {
 
 	test('Parens with postfix operator', function(t) {
 		var source = "void main(){global=(viewinvmat*vec4(local,1.0)).xyz;}";
-		var ast;
-		t.doesNotThrow(function() {
-			ast = glsl.parse(source);
-		}, 'Parsing OK');
-
-		var generated = glsl.string(ast, {
-			tab: '',
-			space: '',
-			newline: ''
-		});
-		t.equal(generated, source, 'Generated code OK');
-
-		t.end();
+		Common.parseTestMinified(t, source);
 	});
 };
