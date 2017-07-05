@@ -297,6 +297,12 @@ function gen_parameter(node) {
 	token(node.type_name);
 	whitespace.space(true);
 	token(node.name);
+
+	if ('arraySize' in node) {
+		token('[');
+		generate(node.arraySize);
+		token(']');
+	}
 }
 
 function gen_function(node) {

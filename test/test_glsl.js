@@ -295,4 +295,10 @@ module.exports = function(Common) {
 		Common.parseTestMinified(t, source);
 		t.end();
 	});
+
+	test('Array size in function parameters', function(t) {
+		var source = 'void test(vec3 test1[4],out vec3 test2[4]){}';
+		Common.parseTestMinified(t, source);
+		t.end();
+	});
 };
