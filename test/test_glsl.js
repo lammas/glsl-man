@@ -269,4 +269,30 @@ module.exports = function(Common) {
 		Common.parseTestMinified(t, source);
 		t.end();
 	});
+
+
+	test('if with empty body', function(t) {
+		var source = 'void main(){if(misttype==1.0);else fac=sqrt(fac);}';
+		Common.parseTestMinified(t, source, 'if');
+
+		var source = 'void main(){if(misttype==1.0);else;}';
+		Common.parseTestMinified(t, source, 'if-else');
+
+		var source = 'void main(){if(misttype==1.0);else if(misttype==0.0);else;}';
+		Common.parseTestMinified(t, source, 'if-else if-else');
+
+		t.end();
+	});
+
+	test('for with empty body', function(t) {
+		var source = 'void main(){for(int i=0;i<5;++i);}';
+		Common.parseTestMinified(t, source);
+		t.end();
+	});
+
+	test('while with empty body', function(t) {
+		var source = 'void main(){while(1);}';
+		Common.parseTestMinified(t, source);
+		t.end();
+	});
 };

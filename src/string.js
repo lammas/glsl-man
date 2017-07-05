@@ -47,10 +47,6 @@ var types = {
 	'bool': gen_bool,
 };
 
-function gen_bool(node) {
-	token(node.value);
-}
-
 var noTerminator = {
 	'root': true,
 	'preprocessor': true,
@@ -104,10 +100,15 @@ function statement_body(node, forceSpace) {
 	else {
 		if (forceSpace)
 			whitespace.space(true);
-		whitespace.newline();
-		whitespace.indent();
-		generate(wrap(node));
-		whitespace.dedent();
+		if (node.type == 'expression' && node.expression == null) {
+			whitespace.terminator();
+		}
+		else {
+			whitespace.newline();
+			whitespace.indent();
+			generate(wrap(node));
+			whitespace.dedent();
+		}
 	}
 }
 
@@ -123,6 +124,10 @@ function generate(node) {
 
 function gen_root(node) {
 	list_statements(node.statements);
+}
+
+function gen_bool(node) {
+	token(node.value);
 }
 
 function gen_type(node) {
@@ -407,7 +412,13 @@ function gen_if_statement(node, isElseIf) {
 			whitespace.tab();
 			token('else');
 			// Only force space after statement if newlines are stripped
-			statement_body(node.elseBody, whitespace.options.newline == '');
+			// and we actually have a statement following the 'else'.
+			var forceSpace = false;
+			if (whitespace.options.newline == '')
+				forceSpace = true;
+			if (node.elseBody.type == 'expression' && node.elseBody.expression == null)
+				forceSpace = false;
+			statement_body(node.elseBody, forceSpace);
 		}
 	}
 }
