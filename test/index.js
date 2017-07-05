@@ -22,7 +22,7 @@ var Common = {
 		var generated = glsl.string(ast);
 		t.equal(generated, source, msg + 'Generated code OK');
 
-		return ast; // for inspection
+		return [ast, generated]; // for inspection
 	},
 
 	parseTestMinified: function(t, source, message) {
@@ -43,7 +43,7 @@ var Common = {
 		});
 		t.equal(generated, source, msg + 'Generated code OK');
 
-		return ast; // for inspection
+		return [ast, generated]; // for inspection
 	}
 };
 

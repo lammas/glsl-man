@@ -270,6 +270,11 @@ module.exports = function(Common) {
 		t.end();
 	});
 
+	test('Parens with ternary operator', function(t) {
+		var source = 'int quick_floor(float x){return int(x)-(x<0.0?1:0);}';
+		Common.parseTestMinified(t, source);
+		t.end();
+	});
 
 	test('if with empty body', function(t) {
 		var source = 'void main(){if(misttype==1.0);else fac=sqrt(fac);}';

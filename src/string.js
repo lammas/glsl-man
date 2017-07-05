@@ -60,7 +60,12 @@ var noTerminator = {
 var noParens = {
 	'identifier': true,
 	'function_call': true,
-}
+};
+
+var binaryParens = {
+	'binary': true,
+	'ternary': true
+};
 
 function token(s) {
 	output.push(s);
@@ -254,7 +259,7 @@ function gen_binary(node) {
 			break;
 
 		default:
-			if (node.left.type == 'binary') {
+			if (node.left.type in binaryParens) {
 				token('(');
 				generate(node.left);
 				token(')');
@@ -267,7 +272,7 @@ function gen_binary(node) {
 			generate(node.operator);
 			whitespace.space();
 
-			if (node.right.type == 'binary') {
+			if (node.right.type in binaryParens) {
 				token('(');
 				generate(node.right);
 				token(')');
