@@ -13,7 +13,9 @@
 // limitations under the License.
 
 /*
- * This is a PEG.js grammar for the OpenGL ES shading language 1.0.
+ * This grammar has been significantly modified and extended by the glsl-man
+ * project (https://github.com/lammas/glsl-man) to support most current GLSL
+ * features.
  */
 
 {
@@ -697,10 +699,15 @@ void_type "void"
 
 type_name "type name"
   = "float"
+  / "double"
   / "int"
+  / "uint"
   / "bool"
-  / "sampler2D"
-  / "samplerCube"
+  / sampler_buffer
+  / sampler_rect
+  / sampler_ms
+  / sampler
+  / sampler_cube
   / vector
   / matrix
   / name:identifier {
@@ -720,15 +727,41 @@ identifier "identifier"
   }
 
 keyword "keyword"
-  = "attribute" / "const" / "bool" / "float" / "int"
+  = "bool" / "float" / "double" / "int" / "uint"
+  / sampler_buffer / sampler_rect / sampler_ms / sampler / sampler_cube
+  / vector / matrix
   / "break" / "continue" / "do" / "else" / "for" / "if"
-  / "discard" / "return" / vector / matrix
+  / "discard" / "return" / "attribute" / "const"
   / "in" / "out" / "inout" / "uniform" / "varying"
   / "sampler2D" / "samplerCube" / "struct" / "void"
   / "while" / "highp" / "mediump" / "lowp" / "true" / "false"
 
-vector = a:([bi]? "vec" [234]) { return a.join(""); }
-matrix = a:("mat" [234]) { return a.join(""); }
+
+/*
+Types:
+	bvecn: a vector of booleans
+	ivecn: a vector of signed integers
+	uvecn: a vector of unsigned integers
+	vecn:  a vector of single-precision floating-point numbers
+	dvecn: a vector of double-precision floating-point numbers
+*/
+vector = a:([biud]? "vec" [234]) { return a.join(""); }
+
+/*
+All matrix types are floating-point, either single-precision or double-precision.
+Matrix types are as follows, where n and m can be the numbers 2, 3, or 4:
+
+	matnxm: A matrix with n columns and m rows. OpenGL uses column-major matrices.
+	matn: A matrix with n columns and n rows. Shorthand for matnxn
+	Double-precision matrices (GL 4.0 and above) can be declared with a dmat instead of mat
+*/
+matrix = a:([d]? "mat" [234] $([x] [234])?) { return a.join(""); }
+
+sampler = a:([iu]? "sampler" [123] "D" "Array"? "Shadow"?) { return a.join(""); }
+sampler_cube = a:([iu]? "samplerCube" "Array"? "Shadow"?) { return a.join(""); }
+sampler_rect = a:([iu]? "sampler2DRect" "Shadow"?) { return a.join(""); }
+sampler_ms = a:([iu]? "sampler2DMS" "Array"?) { return a.join(""); }
+sampler_buffer = a:([iu]? "samplerBuffer") { return a.join(""); }
 
 reserved "reserved name"
   = single_underscore_identifier* "__" [A-Za-z_0-9]*

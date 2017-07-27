@@ -306,4 +306,143 @@ module.exports = function(Common) {
 		Common.parseTestMinified(t, source);
 		t.end();
 	});
+
+	test('Basic types', function(t) {
+		var sources = [
+			'bool a;',
+			'int a;',
+			'uint a;',
+			'float a;',
+			'double a;',
+		];
+		for (var i=0; i<sources.length; ++i) {
+			Common.parseTestMinified(t, sources[i], sources[i]);
+		}
+		t.end();
+	});
+
+	test('Vector types', function(t) {
+		var sources = [
+			'vec2 v;',
+			'bvec2 v;',
+			'ivec2 v;',
+			'uvec2 v;',
+			'dvec2 v;',
+
+			'vec3 v;',
+			'bvec3 v;',
+			'ivec3 v;',
+			'uvec3 v;',
+			'dvec3 v;',
+
+			'vec4 v;',
+			'bvec4 v;',
+			'ivec4 v;',
+			'uvec4 v;',
+			'dvec4 v;',
+		];
+		for (var i=0; i<sources.length; ++i) {
+			Common.parseTestMinified(t, sources[i], sources[i]);
+		}
+		t.end();
+	});
+
+	test('Matrix types', function(t) {
+		var sources = [
+			'mat2 m;',
+			'mat3 m;',
+			'mat4 m;',
+
+			'dmat2 m;',
+			'dmat3 m;',
+			'dmat4 m;',
+
+			'mat2x2 m;',
+			'mat2x3 m;',
+			'mat2x4 m;',
+			'dmat2x2 m;',
+			'dmat2x3 m;',
+			'dmat2x4 m;',
+
+			'mat3x2 m;',
+			'mat3x3 m;',
+			'mat3x4 m;',
+			'dmat3x2 m;',
+			'dmat3x3 m;',
+			'dmat3x4 m;',
+
+			'mat4x2 m;',
+			'mat4x3 m;',
+			'mat4x4 m;',
+			'dmat4x2 m;',
+			'dmat4x3 m;',
+			'dmat4x4 m;',
+		];
+		for (var i=0; i<sources.length; ++i) {
+			Common.parseTestMinified(t, sources[i], sources[i]);
+		}
+		t.end();
+	});
+
+	test('Sampler types', function(t) {
+		var sources = [
+			'sampler1D s;',
+			'usampler1D s;',
+			'isampler1D s;',
+			'sampler1DArray s;',
+			'usampler1DArray s;',
+			'isampler1DArray s;',
+
+			'sampler2D s;',
+			'usampler2D s;',
+			'isampler2D s;',
+			'sampler2DArray s;',
+			'usampler2DArray s;',
+			'isampler2DArray s;',
+
+			'sampler3D s;',
+			'usampler3D s;',
+			'isampler3D s;',
+			// Currently not described at https://www.khronos.org/opengl/wiki/Sampler_(GLSL)
+			// 'sampler3DArray s;',
+			// 'usampler3DArray s;',
+			// 'isampler3DArray s;',
+
+			'samplerCube s;',
+			'usamplerCube s;',
+			'isamplerCube s;',
+			'samplerCubeArray s;',
+			'usamplerCubeArray s;',
+			'isamplerCubeArray s;',
+
+			'samplerBuffer s;',
+			'usamplerBuffer s;',
+			'isamplerBuffer s;',
+
+			'sampler2DRect s;',
+			'usampler2DRect s;',
+			'isampler2DRect s;',
+
+			'sampler2DMS s;',
+			'usampler2DMS s;',
+			'isampler2DMS s;',
+			'sampler2DMSArray s;',
+			'usampler2DMSArray s;',
+			'isampler2DMSArray s;',
+
+
+			'sampler1DShadow s;',
+			'sampler2DShadow s;',
+			'samplerCubeShadow s;',
+			'sampler2DRectShadow s;',
+			'sampler1DArrayShadow s;',
+			'sampler2DArrayShadow s;',
+			'samplerCubeArrayShadow s;',
+		];
+
+		for (var i=0; i<sources.length; ++i) {
+			Common.parseTestMinified(t, sources[i], sources[i]);
+		}
+		t.end();
+	});
 };
