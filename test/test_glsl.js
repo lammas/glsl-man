@@ -445,4 +445,25 @@ module.exports = function(Common) {
 		}
 		t.end();
 	});
+
+	test('Type suffixes', function(t) {
+		var sources = [
+			'int a=4;',
+			'int a=0xffffffff;',
+			'int a=0123;',
+			'uint a=3u;',
+			'uint a=0xffffffffU;',
+			'uint a=0123u;',
+			'uint a=0xbeefu;',
+			'float a=0.5;',
+			'float a=0.5f;',
+			'float a=0.5F;',
+			'double a=0.5lf;',
+			'double a=0.5LF;',
+		];
+		for (var i=0; i<sources.length; ++i) {
+			Common.parseTestMinified(t, sources[i], sources[i]);
+		}
+		t.end();
+	});
 };

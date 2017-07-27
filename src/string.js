@@ -384,8 +384,6 @@ function gen_accessor(node) {
 
 function gen_float(node) {
 	token(node.value);
-	if (node.value % 1 == 0)
-		token('.0');
 }
 
 function gen_int(node) {

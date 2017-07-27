@@ -770,45 +770,55 @@ single_underscore_identifier
   = [A-Za-z0-9]* "_" [A-Za-z0-9]+
 
 int_constant
-  = head:[\-1-9] tail:[0-9]* {
+  = head:[\-1-9] tail:[0-9]* unsigned:[Uu]? {
       return new node({
         type: "int",
-        value: parseInt([head].concat(tail).join(""), 10)
+        format: "number",
+        value_base10: parseInt([head].concat(tail).join(""), 10),
+        value: [head].concat(tail).join("") + (unsigned ? unsigned : '')
       });
     }
-  / "0"[Xx] digits:[0-9A-Fa-f]+ {
-      return new node({
-        type:"int",
-        value:parseInt(digits.join(""), 16)
-      });
-    }
-  / "0" digits:[0-7]+ {
-      return new node({
-        type:"int",
-        value:parseInt(digits.join(""), 8)
-      });
-    }
-  / "0" {
+  / "0"[Xx] digits:[0-9A-Fa-f]+ unsigned:[Uu]? {
       return new node({
         type: "int",
-        value: 0
+        format: "hex",
+        value_base10: parseInt(digits.join(""), 16),
+        value: "0x" + digits.join("") + (unsigned ? unsigned : '')
+      });
+    }
+  / "0" digits:[0-7]+ unsigned:[Uu]? {
+      return new node({
+        type: "int",
+        format: "octal",
+        value_base10: parseInt(digits.join(""), 8),
+        value: "0" + digits.join("") + (unsigned ? unsigned : '')
+      });
+    }
+  / "0" unsigned:[Uu]? {
+      return new node({
+        type: "int",
+        format: "number",
+        value_base10: 0,
+        value: "0" + (unsigned ? unsigned : '')
       });
     }
 
 float_constant
-  = digits:([\-0-9]*"."[0-9]+float_exponent? / [0-9]+"."[0-9]*float_exponent?)
+  = digits:([\-0-9]*"."[0-9]+float_exponent? / [0-9]+"."[0-9]*float_exponent?) suffix:([fF] / "lf" / "LF")?
     {
       digits[0] = digits[0].join("");
       digits[2] = digits[2].join("");
       return new node({
         type: "float",
-        value:parseFloat(digits.join(""))
+        value_base10: parseFloat(digits.join("")),
+        value: digits.join("") + (suffix ? suffix : '')
       });
     }
-  / digits:([\-0-9]+float_exponent) {
+  / digits:([\-0-9]+float_exponent) suffix:[f]? {
       return new node({
         type: "float",
-        value: parseFloat(digits[0].join("") + digits[1])
+        value_base10: parseFloat(digits[0].join("") + digits[1]),
+        value: digits.join("") + (suffix ? suffix : '')
       });
   }
 
