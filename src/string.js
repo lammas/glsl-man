@@ -156,7 +156,12 @@ function gen_preprocessor(node) {
 			token(node.directive);
 			whitespace.space(true);
 			token(node.identifier);
-			if (node.token_string.length > 0) {
+			if (node.parameters && node.parameters.length > 0) {
+				token('(');
+				list_parameters(node.parameters);
+				token(')');
+			}
+			if (node.token_string && node.token_string.length > 0) {
 				whitespace.space(true);
 				token(node.token_string);
 			}

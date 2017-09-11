@@ -15,6 +15,16 @@ module.exports = function(Common) {
 		t.end();
 	});
 
+	test('Preprocess: #define with parameters', function(t) {
+		var ast;
+		var source = '#define FOO(X) (X*X)\n';
+		Common.parseTest(t, source);
+
+		source = '#define FOO(X, Y, Z) { X *= Y + Z }\n';
+		Common.parseTest(t, source);
+		t.end();
+	});
+
 	test('Preprocess: #undef', function(t) {
 		var source = '#undef FOO\n';
 		Common.parseTest(t, source);
@@ -77,4 +87,5 @@ module.exports = function(Common) {
 		}
 		t.end();
 	});
+
 };
