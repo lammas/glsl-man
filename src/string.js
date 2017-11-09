@@ -62,6 +62,12 @@ var noParens = {
 	'function_call': true,
 };
 
+var unaryParens = {
+	'unary': true,
+	'binary': true,
+	'ternary': true
+};
+
 var binaryParens = {
 	'binary': true,
 	'ternary': true
@@ -291,7 +297,14 @@ function gen_binary(node) {
 
 function gen_unary(node) {
 	generate(node.operator);
-	generate(node.expression);
+	if (node.expression.type in unaryParens) {
+		token('(');
+		generate(node.expression);
+		token(')');
+	}
+	else {
+		generate(node.expression);
+	}
 }
 
 

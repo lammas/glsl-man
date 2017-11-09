@@ -276,6 +276,15 @@ module.exports = function(Common) {
 		t.end();
 	});
 
+	test('Unary operator parens', function(t) {
+		var source = 'void f(){return -((lumaNW+lumaNE)-(lumaSW+lumaSE));}';
+		Common.parseTestMinified(t, source);
+
+		var source = 'void f(){return -(-sth);}';
+		Common.parseTestMinified(t, source);
+		t.end();
+	});
+
 	test('if with empty body', function(t) {
 		var source = 'void main(){if(misttype==1.0);else fac=sqrt(fac);}';
 		Common.parseTestMinified(t, source, 'if');
