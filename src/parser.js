@@ -632,11 +632,7 @@ function peg$parse(input, options) {
       peg$c203 = "bool",
       peg$c204 = peg$literalExpectation("bool", false),
       peg$c205 = function(name) {
-            if (name.name in typeNames) {
-               return name.name;
-            } else {
-              return null;
-            }
+            return name.name;
           },
       peg$c206 = peg$otherExpectation("identifier"),
       peg$c207 = /^[^A-Za-z_0-9]/,

@@ -711,11 +711,7 @@ type_name "type name"
   / vector
   / matrix
   / name:identifier {
-      if (name.name in typeNames) {
-         return name.name;
-      } else {
-        return null;
-      }
+      return name.name;
     }
 
 identifier "identifier"

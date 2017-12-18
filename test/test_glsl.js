@@ -475,4 +475,10 @@ module.exports = function(Common) {
 		}
 		t.end();
 	});
+
+	test('Custom types', function(t) {
+		Common.parseTest(t, '#define VEC3 vec3\nVEC3 foobar;\n', 'defined');
+		Common.parseTest(t, '#include foobar.glsl;\nFoobar foo;\n', 'included');
+		t.end();
+	});
 };
